@@ -1,0 +1,21 @@
+body {
+  background-color: rgb(14, 14, 14);
+  color: white;
+  margin: 0;
+  font-family: monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --dot-bg: rgb(14, 14, 14);
+  --dot-color: rgb(31, 31, 31);
+  --dot-size: 1px;
+  --dot-space: 6px;
+	background:
+		linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+		var(--dot-color);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}

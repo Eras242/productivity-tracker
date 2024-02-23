@@ -1,0 +1,102 @@
+.day-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(15, 15, 15);
+  padding: 0;
+  height: 8rem;
+  width: 1266px;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.day-line {
+  display: flex;
+  align-items: center;
+  width: 75%;
+  height: 1px;
+  z-index: 2;
+  background-color: rgba(80, 80, 80, 1);
+  position: absolute;
+}
+
+.day-line.start-finish {
+  background-color: rgba(80, 80, 80, 0);
+  border: none;
+  border-top: 1px dashed rgba(80, 80, 80, 0.5);
+  position: absolute;
+  z-index: 1;
+  width: 95%;
+}
+
+.task-dot {
+  width: 3px;
+  height: 3px;
+  background-color: rgb(116, 236, 245);
+  border-radius: 50%;
+  position: absolute;
+  left: 12%;
+}
+
+/* .time-markers {
+  font-size: 11px;
+  width: 200%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  top: -20px;
+} */
+
+.time-marker.wake-up {
+  position: absolute;
+  bottom: -2.5rem;
+  color: rgba(80, 80, 80, 0.5);
+}
+.time-marker.sleep {
+  color: rgba(80, 80, 80, 0.5);
+  position: absolute;
+  bottom: -2.5rem;
+  right: 0;
+}
+
+.time-marker.start {
+  position: absolute;
+  top: -2.5rem;
+  color: white;
+}
+.time-marker.end {
+  color: white;
+  top: -2.5rem;
+  position: absolute;
+  right: 0;
+}
+
+.timeline-form {
+  display: flex;
+}
+
+.timeline.stats {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.time-tag.day {
+  margin-top: 1rem;
+}
+
+.timeline.day-scrubber {
+  position: absolute;
+  background-color: rgba(160, 160, 160, 1);
+  left: 21%;
+  width: 1px;
+  height: 1rem;
+}
+
+.timeline.headers {
+  display: flex;
+  gap: 0.5rem;
+}
