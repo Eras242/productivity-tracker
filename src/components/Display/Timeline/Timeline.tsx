@@ -9,9 +9,15 @@ type TimelineProps = {
   timelineInfo: TimelineInfoInterface;
 };
 
+type timeCountType = {
+  timeString: string;
+  minutesCount: number;
+};
+
 export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
   const [currentTime, setCurrentTime] = useState<string>("");
-  const [workDuration, setWorkDuration] = useState<string>("");
+  const [totalWorkDuration, setTotalWorkDuration] = useState<number>(0);
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
 
   useEffect(() => {
     const timeInterval = setInterval(() => {
@@ -24,30 +30,28 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
 
       setCurrentTime(formattedTime);
     });
-
     if (timelineInfo) {
-      setWorkDuration(() => {
-        const duration: number = getDuration(
-          timelineInfo.start!,
-          timelineInfo.end!
-        )?.duration;
+      const dayTotal: number | undefined = getDuration(
+        timelineInfo.start!,
+        timelineInfo.end!
+      )?.duration;
 
-        console.log(typeof duration);
+      setTotalWorkDuration(dayTotal!);
 
-        const currentTimeMinutes: number = timeConverter(currentTime, "tm");
-        console.log(currentTimeMinutes);
-        console.log(currentTimeMinutes - duration);
-        // const workdayDuration = getDuration(
-        //   duration?.duration,
-        //   currentTimeMinutes
-        // );
+      // get current time in minutes (work day elapsed time)
+      const currentTimeMinutes: number | string = Number(
+        timeConverter(currentTime, "tm")
+      );
 
-        return workDuration;
-      });
+      // Calculate difference between them (time remaining)
+      const timeRemaining = dayTotal! - currentTimeMinutes;
+
+      const remaining: string | number = timeConverter(timeRemaining, "mt");
+      setTimeRemaining(String(remaining));
     }
 
     return () => clearInterval(timeInterval);
-  }, []);
+  }, [timelineInfo, currentTime, totalWorkDuration]);
 
   return (
     <div className="container day-timeline">
@@ -59,7 +63,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
         </p>
         <p className="time-marker sleep">
           {typeof timelineInfo.sleep === "number"
-            ? timeConverter(timelineInfo.sleep) + " AM"
+            ? timeConverter(timelineInfo.sleep, "mt") + " AM"
             : "NaN"}
         </p>
       </div>
@@ -75,6 +79,12 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
             : "NaN"}
         </p>
         <div className="timeline day-scrubber"></div>
+        <div className="timeline task-dot-container">
+          {" "}
+          {tasks.map((t) => {
+            return <TaskDot task={t} info={timelineInfo} />;
+          })}
+        </div>
       </div>
       <div className="timeline stats">
         <div className="timeline headers">
@@ -86,9 +96,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
             {getDuration(timelineInfo.start!, timelineInfo.end!)?.minutes}MIN
           </div>
         </div>
-        <p>{getDuration(timelineInfo.start!, timelineInfo.end!)?.duration}</p>
-        <div className="time-tag day">{}</div>
-        <div className="time-tag day">{}</div>
+        <div className="time-tag day">{totalWorkDuration}</div>
       </div>
     </div>
   );

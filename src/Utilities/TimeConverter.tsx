@@ -31,7 +31,7 @@ export const timeConverter = (
         minutes = "0" + minutes;
       }
 
-      return (hour + ":" + minutes);
+      return hour + ":" + minutes;
     }
   } else if (conversion == "tm") {
     try {
@@ -70,6 +70,6 @@ export const getDuration = (
   return { duration: time, hours, minutes };
 };
 
-export const timePercentage = (value: number, totalDurationValue: number) => {
-  return (value / totalDurationValue) * 100 + "%";
+export const timePercentage = (n: number, d: number): string => {
+  return ((n / d) * 100).toFixed() + "%";
 };

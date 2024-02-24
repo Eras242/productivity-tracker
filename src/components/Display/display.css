@@ -30,13 +30,45 @@
   width: 95%;
 }
 
+.task-dot.box {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .task-dot {
   width: 3px;
   height: 3px;
-  background-color: rgb(116, 236, 245);
   border-radius: 50%;
+  position: relative;
+}
+
+.ring {
+  border: 3px solid;
+  border-color: inherit;
+  border-radius: 30px;
+  height: 3px;
+  width: 3px;
   position: absolute;
-  left: 12%;
+  animation: pulsate 5s ease-out;
+  animation-iteration-count: infinite;
+  opacity: 0;
+}
+@keyframes pulsate {
+  0% {
+    -webkit-transform: scale(0.1, 0.1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    -webkit-transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
 }
 
 /* .time-markers {
