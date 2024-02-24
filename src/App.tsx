@@ -36,31 +36,31 @@ const testTasks = [
   {
     id: "d7886657-791f-4a54-8f74-c8405432f0fa",
     title: "heglle123",
-    time: "07:12",
+    time: "10:30",
     completed: false,
   },
   {
     id: "0670ae91-bda3-41c4-984e-ff2ce70d6a19",
-    title: "safkiakf",
-    time: "12:51",
+    title: "Do this thing and do this other thing",
+    time: "11:45",
     completed: false,
   },
   {
     id: "1e3d1b79-7909-452f-afae-476fdc503a0e",
     title: "215912",
-    time: "15:03",
+    time: "12:30",
     completed: false,
   },
   {
     id: "1e3d1b79-7129-452f-afae-476fdc503a0e",
     title: "ajgasf",
-    time: "17:32",
+    time: "15:25",
     completed: true,
   },
   {
     id: "1e3d1b79-f109-452f-afae-476fdc503a0e",
     title: "asdassd",
-    time: "19:24",
+    time: "18:00",
     completed: true,
   },
 ];

@@ -70,6 +70,16 @@ export const getDuration = (
   return { duration: time, hours, minutes };
 };
 
-export const timePercentage = (n: number, d: number): string => {
-  return ((n / d) * 100).toFixed() + "%";
+export const timePercentage = (
+  start: number,
+  end: number,
+  taskTime: number
+): string => {
+  // Get Total Range, e.g 1080 - 600 = 480
+  const totalRange = end - start;
+  // Get task time position within range
+  const taskPosition = taskTime - start;
+  const perc = ((taskPosition / totalRange) * 100).toFixed();
+
+  return perc + "%";
 };

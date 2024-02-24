@@ -78,7 +78,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
             ? timeConverter(timelineInfo.end, "mt") + " AM"
             : "NaN"}
         </p>
-        <div className="timeline day-scrubber"></div>
+        {/* <div className="timeline day-scrubber"></div> */}
         <div className="timeline task-dot-container">
           {" "}
           {tasks.map((t) => {
@@ -96,7 +96,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
             {getDuration(timelineInfo.start!, timelineInfo.end!)?.minutes}MIN
           </div>
         </div>
-        <div className="time-tag day">{totalWorkDuration}</div>
+        {/* <div className="time-tag day">{totalWorkDuration}</div> */}
       </div>
     </div>
   );

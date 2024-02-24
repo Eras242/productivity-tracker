@@ -6,6 +6,7 @@ import {
   ValidStateProps,
 } from "../../App";
 import { TimelineForm } from "./TimelineForm";
+import { Carousel } from "./Carousel/Carosel";
 
 type CreateProps = {
   onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -44,6 +45,7 @@ export const Create = ({
 
   return (
     <div className="container add-todo">
+      <Carousel />
       <h1>Add Todo</h1>
       <form action="">
         <div className="title-time">
