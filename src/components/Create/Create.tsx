@@ -6,7 +6,7 @@ import {
   ValidStateProps,
 } from "../../App";
 import { TimelineForm } from "./TimelineForm";
-import { Carousel } from "./Carousel/Carosel";
+import { Carousel } from "./Carousel/Carousel";
 
 type CreateProps = {
   onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
