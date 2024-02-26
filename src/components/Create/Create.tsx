@@ -45,28 +45,33 @@ export const Create = ({
 
   return (
     <div className="container add-todo">
-      <Carousel />
-      <h1>Add Todo</h1>
-      <form action="">
-        <div className="title-time">
-          <input
-            name="title"
-            type="text"
-            value={formDetails.title}
-            onChange={onChangeTime}
-            placeholder="Title"
-          />
-          <input name="time" type="time" onChange={onChangeTime} />
-        </div>
-        <button onClick={submitTask}>Add Todo</button>
-        <animated.div style={fade} className="invalid-form">
-          <p>{valid["message"]}</p>
-        </animated.div>
-      </form>
-      <TimelineForm
+      <div style={{ width: "100%", height: "50%" }}>
+        <Carousel />
+      </div>
+
+      <div style={{ width: "100%", height: "50%" }}>
+        <h1>Add Todo</h1>
+        <form action="">
+          <div className="title-time">
+            <input
+              name="title"
+              type="text"
+              value={formDetails.title}
+              onChange={onChangeTime}
+              placeholder="Title"
+            />
+            <input name="time" type="time" onChange={onChangeTime} />
+          </div>
+          <button onClick={submitTask}>Add Todo</button>
+          <animated.div style={fade} className="invalid-form">
+            <p>{valid["message"]}</p>
+          </animated.div>
+        </form>
+      </div>
+      {/* <TimelineForm
         onChangeTimelineForm={onChangeTimelineForm}
         timelineInfo={timelineInfo}
-      />
+      /> */}
     </div>
   );
 };

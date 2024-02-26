@@ -1,5 +1,7 @@
 import React from "react";
 import { TimelineInfoInterface } from "../../App";
+import { jsx } from "@emotion/react";
+import { css } from "@emotion/css";
 
 interface TimelineFormProps {
   onChangeTimelineForm: (e: React.ChangeEvent<HTMLInputElement>) => void;

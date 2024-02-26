@@ -3,6 +3,8 @@ import { TimelineInfoInterface, TodoStateProps } from "../../../App";
 import { getDuration, timeConverter } from "../../../Utilities/TimeConverter";
 import { timePercentage } from "../../../Utilities/TimeConverter";
 import { TaskDot } from "./TaskDot";
+import { jsx } from "@emotion/react";
+import { css } from "@emotion/css";
 
 type TimelineProps = {
   tasks: TodoStateProps[];

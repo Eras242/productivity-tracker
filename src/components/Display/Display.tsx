@@ -8,6 +8,8 @@ import {
 import "./display.css";
 import { Timeline } from "./Timeline/Timeline";
 import { timeConverter } from "../../Utilities/TimeConverter";
+import { jsx } from "@emotion/react";
+import { css } from "@emotion/css";
 
 type DisplayProps = {
   tasks: TodoStateProps[];
