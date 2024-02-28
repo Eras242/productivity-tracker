@@ -45,7 +45,7 @@ export const Create = ({
 
   return (
     <div className="container add-todo">
-      <div style={{ width: "100%", height: "50%" }}>
+      <div style={{ width: "100%", height: "50%", boxSizing: "border-box" }}>
         <Carousel />
       </div>
 
