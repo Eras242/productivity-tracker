@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./carousel.css";
 import styled from "@emotion/styled";
 import { useTransition, animated } from "@react-spring/web";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
+import { timeConverter } from "../../../Utilities/TimeConverter";
+import { Timeline } from "../../Display/Timeline/Timeline";
+import { TimelineInfoInterface } from "../../../App";
 
 type ScreenProps = {
   bgColor: string;
@@ -13,9 +16,48 @@ export const Carousel = () => {
   const [screenIndex, setScreenIndex] = useState<number>(0);
   const screens = [Wake, Start, End, Sleep, Complete];
 
+  const [error, setError] = useState({ error: false, message: "" });
+
   const handleToggle = () => {
-    setScreenIndex((prev) => (prev + 1) % screens.length);
-    console.log(screenIndex);
+    if (error.error != true) {
+      setScreenIndex((prev) => (prev + 1) % screens.length);
+    } else {
+      return;
+    }
+  };
+
+  const [tempTimeline, setTempTimeline] = useState<TimelineInfoInterface>({
+    wakeUp: 0,
+    start: 0,
+    end: 0,
+    sleep: 0,
+  });
+  useEffect(() => {
+    console.log(tempTimeline);
+  }, [tempTimeline]);
+
+  const handleSetTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = timeConverter(e.target.value, "tm");
+    setTempTimeline((prev) => ({
+      ...prev,
+      [e.target.name]: time,
+    }));
+    // if (e.target.name == "wakeUp") {
+    //   return;
+    // } else {
+    //   const keys = Object.keys(tempTimeline);
+    //   const currentIndex = keys.indexOf(e.target.name);
+
+    //   if (
+    //     tempTimeline[keys[currentIndex]] < tempTimeline[keys[currentIndex - 1]]
+    //   ) {
+    //     setError({
+    //       error: true,
+    //       message:
+    //         "Invalid value: Current time value cannot be less than previous time value",
+    //     });
+    //   }
+    // }
   };
 
   const transitions = useTransition(screenIndex, {
@@ -31,7 +73,6 @@ export const Carousel = () => {
     height: 200px;
     position: relative;
     width: 100%;
-    cursor: pointer;
     overflow: hidden;
     & > div {
       will-change: transform, opacity;
@@ -58,15 +99,18 @@ export const Carousel = () => {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   `;
 
   function Wake() {
     return (
       <Screen bgColor="#191919">
         What time would you like to wake up?
-        <input type="time" />
+        <input type="time" name="wakeUp" onChange={handleSetTime} />
         <button onClick={handleToggle}>Next</button>
+        <p>ERROR: {error.error ? "True" : "False"}</p>
+        <p>{JSON.stringify(tempTimeline.start)}</p>
       </Screen>
     );
   }
@@ -75,8 +119,9 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         When would you like to start working?
-        <input type="time" />
+        <input type="time" name="start" onChange={handleSetTime} />
         <button onClick={handleToggle}>Next</button>
+        <p>ERROR: {error.error ? "True" : "False"}</p>
       </Screen>
     );
   }
@@ -85,8 +130,9 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         And what time would you like to finish working?
-        <input type="time" />
+        <input type="time" name="finish" onChange={handleSetTime} />
         <button onClick={handleToggle}>Next</button>
+        <p>ERROR: {error.error ? "True" : "False"}</p>
       </Screen>
     );
   }
@@ -95,8 +141,9 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         And when would you like to go to bed?
-        <input type="time" />
+        <input type="time" name="sleep" onChange={handleSetTime} />
         <button onClick={handleToggle}>Next</button>
+        <p>ERROR: {error.error ? "True" : "False"}</p>
       </Screen>
     );
   }
@@ -126,6 +173,10 @@ export const Carousel = () => {
       </Screen>
     );
   }
+
+  const handleClick = (e: any) => {
+    console.log(e.target.id);
+  };
   return (
     <div
       style={{
@@ -159,10 +210,42 @@ export const Carousel = () => {
           gap: "0.25rem",
         }}
       >
-        <Dot />
-        <Dot />
-        <Dot />
-        <Dot />
+        <Dot
+          id={"0"}
+          onClick={handleClick}
+          style={
+            screenIndex == 0
+              ? { backgroundColor: "white" }
+              : { backgroundColor: "none" }
+          }
+        />
+        <Dot
+          id={"1"}
+          onClick={handleClick}
+          style={
+            screenIndex == 1
+              ? { backgroundColor: "white" }
+              : { backgroundColor: "none" }
+          }
+        />
+        <Dot
+          id={"2"}
+          onClick={handleClick}
+          style={
+            screenIndex == 2
+              ? { backgroundColor: "white" }
+              : { backgroundColor: "none" }
+          }
+        />
+        <Dot
+          id={"3"}
+          onClick={handleClick}
+          style={
+            screenIndex == 3
+              ? { backgroundColor: "white" }
+              : { backgroundColor: "none" }
+          }
+        />
       </div>
     </div>
   );

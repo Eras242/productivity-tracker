@@ -13,12 +13,9 @@ interface TaskDotInterface {
 
 export const TaskDot = ({ task, info }: TaskDotInterface) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  console.log(info.end);
 
   const taskTime = Number(timeConverter(task.time, "tm"));
   const perc = timePercentage(info.start!, info.end!, taskTime);
-  console.log("hello");
-  console.log(info.end! - taskTime);
   return (
     <div
       className="task-dot box"
