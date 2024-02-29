@@ -15,8 +15,8 @@
 }
 
 .container {
-  box-sizing: border-box;
   padding: 2rem;
+  box-sizing: border-box;
   background-color: rgb(19, 19, 19);
   border: 1px solid rgba(63, 63, 63, 0.2);
   border-radius: 0.5rem;
@@ -25,11 +25,13 @@
 }
 
 .container.add-todo {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   flex-direction: column;
   width: 600px;
   height: 600px;
+  padding: 0;
 }
 .container.display-todos {
   display: flex;

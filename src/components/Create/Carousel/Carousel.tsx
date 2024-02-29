@@ -24,7 +24,7 @@ export const Carousel = () => {
     leave: { opacity: 0, transform: "translate3d(-50%, 0 ,0)" },
     unique: true,
     native: true,
-    // exitBeforeEnter: true,
+    duration: "0.5s",
   });
 
   const Container = styled("div")`
@@ -45,11 +45,20 @@ export const Carousel = () => {
     width: 100%;
     height: 100%;
     display: flex;
+    gap: 1rem;
+    border-radius: 0.5rem;
     flex-direction: column;
-    position: relative;
+    position: absolute;
     justify-content: center;
     align-items: center;
     background-color: ${(props) => props.bgColor};
+  `;
+
+  const Dot = styled.div`
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: white;
   `;
 
   function Wake() {
@@ -95,24 +104,66 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         Complete! Let's add some tasks!
+        <div style={{ display: "flex", flexDirection: "row", gap: "3rem" }}>
+          <div className="time-preview">
+            <p>WAKE UP</p>
+            <h2>07:00</h2>
+          </div>
+          <div className="time-preview">
+            <p>WORK</p>
+            <h2>10:00</h2>
+          </div>
+          <div className="time-preview">
+            <p>FINISH</p>
+            <h2>19:00</h2>
+          </div>
+          <div className="time-preview">
+            <p>WAKE UP</p>
+            <h2>22:00</h2>
+          </div>
+        </div>
         <button onClick={handleToggle}>Next</button>
       </Screen>
     );
   }
   return (
-    <Container>
-      {transitions((style, i) => {
-        // const Comp = screens[i];
-        return (
-          <animated.div
-            style={{
-              ...style,
-            }}
-          >
-            {React.createElement(screens[i])}
-          </animated.div>
-        );
-      })}
-    </Container>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Container>
+        {transitions((style, i) => {
+          // const Comp = screens[i];
+          return (
+            <animated.div
+              style={{
+                ...style,
+              }}
+            >
+              {React.createElement(screens[i])}
+            </animated.div>
+          );
+        })}
+      </Container>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "1rem",
+          zIndex: "999",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "0.25rem",
+        }}
+      >
+        <Dot />
+        <Dot />
+        <Dot />
+        <Dot />
+      </div>
+    </div>
   );
 };
