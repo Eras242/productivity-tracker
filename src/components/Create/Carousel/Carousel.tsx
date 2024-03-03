@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./carousel.css";
 import styled from "@emotion/styled";
-import { useTransition, animated } from "@react-spring/web";
+import { useTransition, animated, config } from "@react-spring/web";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { timeConverter } from "../../../Utilities/TimeConverter";
@@ -67,6 +67,7 @@ export const Carousel = () => {
     unique: true,
     native: true,
     duration: "0.5s",
+    config: config.stiff,
   });
 
   const Container = styled("div")`

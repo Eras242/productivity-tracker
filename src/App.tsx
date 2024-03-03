@@ -6,6 +6,7 @@ import { Display } from "./components/Display/Display";
 import { timeConverter } from "./Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
+import { useSpring, animated } from "@react-spring/web";
 
 const { v4 } = require("uuid");
 
@@ -83,6 +84,7 @@ function App() {
     completed: false,
   });
 
+  const [newDay, setNewDay] = useState<boolean>(false);
   const [tasks, setTasks] = useState<TodoStateProps[]>(testTasks);
   const [filter, setFilter] = useState({
     all: true,
@@ -96,39 +98,17 @@ function App() {
     message: "",
   });
 
-  const [validTimeline, setValidTimeline] = useState<boolean>(true);
+  const slideAnimation = useSpring({
+    from: { transform: "translateX(100%)", opacity: 0 },
+    to: {
+      transform: newDay ? "translateX(0%)" : "translateX(100%)",
+      opacity: newDay ? 1 : 0,
+    },
+  });
 
   // timelineInfo is a minute count conversion of the 24 Hour time provided ("12:24" -> 744)
   const [timelineInfo, setTimelineDetails] =
     useState<TimelineInfoInterface>(testTimeline);
-
-  // function validateTimelineEntries(field: string, value: number) {
-  //   const fields = Object.keys(timelineInfo); // Returns ["wakeUp", "start", "end", "sleep"]
-  //   const currentFieldIndex = fields.indexOf(field); // e.target.name == "wakeUp" == 0
-  //   console.log(field);
-  //   console.log(value);
-
-  //   for (let i = currentFieldIndex + 1; i < fields.length; i++) {
-  //     // starting this loop from e.g: ["wakeUp", ----> "start" <----, "end", "sleep"]
-
-  //     const nextField = fields[i]; // e.g: [----> "wakeUp" <----, "start", "end", "sleep"]
-
-  //     if (value <= timelineInfo[nextField]) {
-  //       console.log(`Invalid input: Value less than previous value`);
-  //       setTimelineDetails((prev) => ({
-  //         ...prev,
-  //         [nextField]: null,
-  //       }));
-  //     } else {
-  //       setTimelineDetails((prev) => ({
-  //         ...prev,
-  //         [nextField]: value,
-  //       }));
-  //       console.log("Valid input, moving to next field");
-  //     }
-  //   }
-  //   console.log(timelineInfo)
-  // }
 
   function onChangeTimelineForm(e: React.ChangeEvent<HTMLInputElement>) {
     let time: string | string[] = e.target.value;
@@ -266,21 +246,26 @@ function App() {
           timelineInfo={timelineInfo}
           valid={valid}
         />
-        <Display
-          tasks={displayTasks}
-          logId={logId}
-          handleCheck={handleCheck}
-          handleMarkAllComplete={handleMarkAllComplete}
-          handleClearAll={handleClearAll}
-          handleClearComplete={handleClearComplete}
-          filter={filter}
-          handleFilter={handleFilter}
-          timelineInfo={timelineInfo}
-        />
-      </div>{" "}
-      <div>
-        <Timeline tasks={tasks} timelineInfo={timelineInfo} />
+        <animated.div style={{ ...slideAnimation }}>
+          <Display
+            tasks={displayTasks}
+            logId={logId}
+            handleCheck={handleCheck}
+            handleMarkAllComplete={handleMarkAllComplete}
+            handleClearAll={handleClearAll}
+            handleClearComplete={handleClearComplete}
+            filter={filter}
+            handleFilter={handleFilter}
+            timelineInfo={timelineInfo}
+          />
+        </animated.div>
       </div>
+      <div>
+        {!newDay ? <Timeline tasks={tasks} timelineInfo={timelineInfo} /> : ""}
+      </div>
+      <button onClick={() => setNewDay(!newDay)}>
+        Show UI: {JSON.stringify(newDay)}
+      </button>
     </div>
   );
 }

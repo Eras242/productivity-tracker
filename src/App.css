@@ -7,10 +7,14 @@
 }
 
 .task-creation-display {
+  overflow: hidden;
+  position: absolute;
   display: flex;
+  width: 100%;
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+  justify-content: center;
   /* height: 100vh; */
 }
 
@@ -22,6 +26,7 @@
   border-radius: 0.5rem;
   width: 650px;
   height: 600px;
+  position: relative;
 }
 
 .container.add-todo {
