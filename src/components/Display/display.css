@@ -7,8 +7,9 @@
   padding: 0;
   height: 8rem;
   width: 1266px;
-  margin-top: 1rem;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .day-line {

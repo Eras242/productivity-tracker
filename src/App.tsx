@@ -6,7 +6,7 @@ import { Display } from "./components/Display/Display";
 import { timeConverter } from "./Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
-import { useSpring, animated } from "@react-spring/web";
+import { useSpring, animated, config } from "@react-spring/web";
 
 const { v4 } = require("uuid");
 
@@ -84,7 +84,7 @@ function App() {
     completed: false,
   });
 
-  const [newDay, setNewDay] = useState<boolean>(false);
+  const [newDay, setNewDay] = useState<boolean>(true);
   const [tasks, setTasks] = useState<TodoStateProps[]>(testTasks);
   const [filter, setFilter] = useState({
     all: true,
@@ -98,12 +98,35 @@ function App() {
     message: "",
   });
 
-  const slideAnimation = useSpring({
-    from: { transform: "translateX(100%)", opacity: 0 },
+  const divSpring = useSpring({
+    from: { transform: "translateY(0px)" },
+    to: { transform: newDay ? "translateY(0px)" : "translateY(-100px)" },
+    delay: newDay ? 0 : 300,
+  });
+  const createSpring = useSpring({
+    from: { transform: "translateX(-315px)" },
     to: {
-      transform: newDay ? "translateX(0%)" : "translateX(100%)",
-      opacity: newDay ? 1 : 0,
+      transform: newDay ? "translateX(-315px)" : "translateX(-633px)",
+      delay: newDay ? 0 : 500,
     },
+  });
+
+  const displaySpring = useSpring({
+    from: { transform: "translateX(633px)", opacity: 0 },
+    to: {
+      transform: newDay ? "translateX(633px)" : "translateX(-17px)",
+      opacity: newDay ? 0 : 1,
+    },
+    delay: newDay ? 0 : 700,
+  });
+
+  const timelineSpring = useSpring({
+    from: { transform: "translateY(400px)", opacity: 0 },
+    to: {
+      transform: newDay ? "translateY(400px)" : "translateY(216px)",
+      opacity: newDay ? 0 : 1,
+    },
+    delay: newDay ? 0 : 900,
   });
 
   // timelineInfo is a minute count conversion of the 24 Hour time provided ("12:24" -> 744)
@@ -237,16 +260,18 @@ function App() {
 
   return (
     <div className="App">
-      <div className="task-creation-display">
-        <Create
-          onChangeTime={onChangeTime}
-          onChangeTimelineForm={onChangeTimelineForm}
-          submitTask={submitTask}
-          formDetails={formDetails}
-          timelineInfo={timelineInfo}
-          valid={valid}
-        />
-        <animated.div style={{ ...slideAnimation }}>
+      <animated.div className="task-creation-display" style={{ ...divSpring }}>
+        <animated.div style={{ ...createSpring }}>
+          <Create
+            onChangeTime={onChangeTime}
+            onChangeTimelineForm={onChangeTimelineForm}
+            submitTask={submitTask}
+            formDetails={formDetails}
+            timelineInfo={timelineInfo}
+            valid={valid}
+          />
+        </animated.div>
+        <animated.div style={{ ...displaySpring }}>
           <Display
             tasks={displayTasks}
             logId={logId}
@@ -259,11 +284,14 @@ function App() {
             timelineInfo={timelineInfo}
           />
         </animated.div>
-      </div>
-      <div>
+      </animated.div>
+      <animated.div style={{ ...timelineSpring }}>
         {!newDay ? <Timeline tasks={tasks} timelineInfo={timelineInfo} /> : ""}
-      </div>
-      <button onClick={() => setNewDay(!newDay)}>
+      </animated.div>
+      <button
+        style={{ position: "absolute", left: 0, bottom: 0 }}
+        onClick={() => setNewDay(!newDay)}
+      >
         Show UI: {JSON.stringify(newDay)}
       </button>
     </div>
