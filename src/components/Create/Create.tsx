@@ -7,6 +7,7 @@ import {
 } from "../../App";
 import { TimelineForm } from "./TimelineForm";
 import { Carousel } from "./Carousel/Carousel";
+import { Login } from "../Login/Login";
 
 type CreateProps = {
   onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -45,6 +46,7 @@ export const Create = ({
 
   return (
     <div className="container add-todo">
+      <Login />
       <div
         style={{
           width: "100%",
@@ -58,7 +60,7 @@ export const Create = ({
         <Carousel />
       </div>
 
-      <div style={{ width: "100%", height: "50%" }}>
+      <div style={{ width: "100%", height: "0%" }}>
         <h1>Add Todo</h1>
         <form action="">
           <div className="title-time">
@@ -77,10 +79,6 @@ export const Create = ({
           </animated.div>
         </form>
       </div>
-      {/* <TimelineForm
-        onChangeTimelineForm={onChangeTimelineForm}
-        timelineInfo={timelineInfo}
-      /> */}
     </div>
   );
 };

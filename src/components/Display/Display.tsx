@@ -35,64 +35,62 @@ export const Display = ({
   timelineInfo,
 }: DisplayProps) => {
   return (
-    <div className="display-main">
-      <div className="container display-todos">
-        <div className="display-header">
-          <div className="display-titles">
-            <p>My Todo List</p>
-            <div className="task-filter">
-              <input
-                type="checkbox"
-                onChange={handleFilter}
-                checked={filter.all}
-                className="filter all"
-                name="all"
-                id="all"
-              />
-              <label htmlFor="all">ALL</label>
-              <input
-                type="checkbox"
-                onChange={handleFilter}
-                checked={filter.unfinished}
-                className="filter unfinished"
-                name="unfinished"
-                id="unfinished"
-              />
-              <label htmlFor="unfinished">UNFINSHED</label>
-              <input
-                type="checkbox"
-                onChange={handleFilter}
-                checked={filter.complete}
-                className="filter complete"
-                name="complete"
-                id="complete"
-              />
-              <label htmlFor="complete">COMPLETE</label>
-            </div>
-            <p>{tasks.length} Items</p>
+    <div className="container display-todos">
+      <div className="display-header">
+        <div className="display-titles">
+          <p>My Todo List</p>
+          <div className="task-filter">
+            <input
+              type="checkbox"
+              onChange={handleFilter}
+              checked={filter.all}
+              className="filter all"
+              name="all"
+              id="all"
+            />
+            <label htmlFor="all">ALL</label>
+            <input
+              type="checkbox"
+              onChange={handleFilter}
+              checked={filter.unfinished}
+              className="filter unfinished"
+              name="unfinished"
+              id="unfinished"
+            />
+            <label htmlFor="unfinished">UNFINSHED</label>
+            <input
+              type="checkbox"
+              onChange={handleFilter}
+              checked={filter.complete}
+              className="filter complete"
+              name="complete"
+              id="complete"
+            />
+            <label htmlFor="complete">COMPLETE</label>
           </div>
+          <p>{tasks.length} Items</p>
         </div>
-        <div className="task-items-container">
-          {" "}
-          {tasks.map((t) => {
-            return (
-              <Task
-                key={t.id}
-                id={t.id}
-                title={t.title}
-                time={t.time}
-                completed={t.completed}
-                logId={logId}
-                handleCheck={handleCheck}
-              />
-            );
-          })}
-        </div>
-        <div className="complete-list">
-          <button onClick={handleMarkAllComplete}>Mark All Complete</button>
-          <button onClick={handleClearComplete}>Clear Complete</button>
-          <button onClick={handleClearAll}>Clear All</button>
-        </div>
+      </div>
+      <div className="task-items-container">
+        {" "}
+        {tasks.map((t) => {
+          return (
+            <Task
+              key={t.id}
+              id={t.id}
+              title={t.title}
+              time={t.time}
+              completed={t.completed}
+              logId={logId}
+              handleCheck={handleCheck}
+            />
+          );
+        })}
+      </div>
+      <div className="complete-list">
+        <button onClick={handleMarkAllComplete}>Mark All Complete</button>
+        <button onClick={handleClearComplete}>Clear Complete</button>
+        <button onClick={handleClearAll}>Clear All</button>
       </div>
     </div>
   );

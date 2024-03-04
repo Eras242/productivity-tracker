@@ -271,7 +271,7 @@ function App() {
             valid={valid}
           />
         </animated.div>
-        <animated.div style={{ ...displaySpring }}>
+        <animated.div className="hello" style={{ ...displaySpring }}>
           <Display
             tasks={displayTasks}
             logId={logId}
