@@ -71,9 +71,9 @@ export const Carousel = () => {
   });
 
   const Container = styled("div")`
-    height: 200px;
-    position: relative;
+    height: 100%;
     width: 100%;
+    position: absolute;
     overflow: hidden;
     & > div {
       will-change: transform, opacity;
@@ -88,7 +88,6 @@ export const Carousel = () => {
     height: 100%;
     display: flex;
     gap: 1rem;
-    border-radius: 0.5rem;
     flex-direction: column;
     position: absolute;
     justify-content: center;
@@ -152,6 +151,7 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         Complete! Let's add some tasks!
+        <h2 className="date-tag">March 6th, 2024</h2>
         <div style={{ display: "flex", flexDirection: "row", gap: "3rem" }}>
           <div className="time-preview">
             <p>WAKE UP</p>
@@ -184,6 +184,8 @@ export const Carousel = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
+        height: "100%",
       }}
     >
       <Container>
@@ -202,9 +204,7 @@ export const Carousel = () => {
       </Container>
       <div
         style={{
-          position: "absolute",
           bottom: "1rem",
-          zIndex: "999",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

@@ -7,6 +7,7 @@ import { timeConverter } from "./Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { useSpring, animated, config } from "@react-spring/web";
+import { Login } from "./components/Login/Login";
 
 const { v4 } = require("uuid");
 
@@ -92,7 +93,6 @@ function App() {
     complete: false,
   });
   const [displayTasks, setDisplayTasks] = useState<TodoStateProps[]>([]);
-
   const [valid, setValid] = useState<ValidStateProps>({
     valid: true,
     message: "",
@@ -101,13 +101,13 @@ function App() {
   const divSpring = useSpring({
     from: { transform: "translateY(0px)" },
     to: { transform: newDay ? "translateY(0px)" : "translateY(-100px)" },
-    delay: newDay ? 0 : 300,
+    delay: newDay ? 0 : 100,
   });
   const createSpring = useSpring({
-    from: { transform: "translateX(-315px)" },
+    from: { transform: "translateX(-525px)" },
     to: {
-      transform: newDay ? "translateX(-315px)" : "translateX(-633px)",
-      delay: newDay ? 0 : 500,
+      transform: newDay ? "translateX(-525px)" : "translateX(-633px)",
+      delay: newDay ? 0 : 200,
     },
   });
 
@@ -117,7 +117,7 @@ function App() {
       transform: newDay ? "translateX(633px)" : "translateX(-17px)",
       opacity: newDay ? 0 : 1,
     },
-    delay: newDay ? 0 : 700,
+    delay: newDay ? 0 : 300,
   });
 
   const timelineSpring = useSpring({
@@ -126,7 +126,7 @@ function App() {
       transform: newDay ? "translateY(400px)" : "translateY(216px)",
       opacity: newDay ? 0 : 1,
     },
-    delay: newDay ? 0 : 900,
+    delay: newDay ? 0 : 300,
   });
 
   // timelineInfo is a minute count conversion of the 24 Hour time provided ("12:24" -> 744)
@@ -260,14 +260,14 @@ function App() {
 
   return (
     <div className="App">
+      {/* <Login /> */}
       <animated.div className="task-creation-display" style={{ ...divSpring }}>
         <animated.div style={{ ...createSpring }}>
           <Create
+            newDay={newDay}
             onChangeTime={onChangeTime}
-            onChangeTimelineForm={onChangeTimelineForm}
             submitTask={submitTask}
             formDetails={formDetails}
-            timelineInfo={timelineInfo}
             valid={valid}
           />
         </animated.div>

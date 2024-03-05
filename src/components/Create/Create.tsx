@@ -5,80 +5,78 @@ import {
   TodoStateProps,
   ValidStateProps,
 } from "../../App";
-import { TimelineForm } from "./TimelineForm";
 import { Carousel } from "./Carousel/Carousel";
 import { Login } from "../Login/Login";
+import { CreateTask } from "./CreateTask";
+import { Dashboard } from "./Dashboard";
 
-type CreateProps = {
+export type CreateProps = {
   onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeTimelineForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   submitTask: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  newDay: boolean;
   formDetails: TodoStateProps;
   valid: ValidStateProps;
-  timelineInfo: TimelineInfoInterface;
 };
 
 export const Create = ({
   onChangeTime,
-  onChangeTimelineForm,
   submitTask,
   formDetails,
+  newDay,
   valid,
-  timelineInfo,
 }: CreateProps) => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loginVisible, setLoginVisible] = useState<boolean>(true);
 
-  const fade = useSpring({
-    opacity: isVisible ? 1 : 0,
+  const containerSpring = useSpring({
+    from: { width: "1050px" },
+    to: {
+      width: newDay ? "1050px" : "600px",
+    },
   });
 
-  useEffect(() => {
-    if (valid["valid"] == false) {
-      setIsVisible(true);
-
-      const timeout = setTimeout(() => {
-        setIsVisible(false);
-      }, 4000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [valid]);
+  const loginFade = useSpring({
+    from: { opacity: 1 },
+    to: { opacity: loggedIn ? 0 : 1 },
+    delay: 200,
+    onRest: () => {
+      loggedIn ? setLoginVisible(false) : setLoginVisible(true);
+    },
+  });
 
   return (
-    <div className="container add-todo">
-      <Login />
-      <div
+    <animated.div className="container add-todo" style={{ ...containerSpring }}>
+      <button
+        onClick={() => {
+          setLoggedIn(!loggedIn);
+        }}
         style={{
-          width: "100%",
-          height: "50%",
-          position: "relative",
-          backgroundColor: "#191919",
-          borderTopLeftRadius: "0.5rem",
-          borderTopRightRadius: "0.5rem",
+          position: "absolute",
+          left: "0px",
+          transform: "translateX(-100%)",
         }}
       >
-        <Carousel />
-      </div>
+        LogggedIn: {JSON.stringify(loggedIn)}
+      </button>
+      {loginVisible && (
+        <animated.div style={{ ...loginFade, width: "100%", height: "100%" }}>
+          {" "}
+          <Login loggedIn={loggedIn} />
+        </animated.div>
+      )}
 
-      <div style={{ width: "100%", height: "0%" }}>
-        <h1>Add Todo</h1>
-        <form action="">
-          <div className="title-time">
-            <input
-              name="title"
-              type="text"
-              value={formDetails.title}
-              onChange={onChangeTime}
-              placeholder="Title"
-            />
-            <input name="time" type="time" onChange={onChangeTime} />
-          </div>
-          <button onClick={submitTask}>Add Todo</button>
-          <animated.div style={fade} className="invalid-form">
-            <p>{valid["message"]}</p>
-          </animated.div>
-        </form>
-      </div>
-    </div>
+      {!loginVisible && <Dashboard />}
+      {!newDay && (
+        <animated.div>
+          <CreateTask
+            formDetails={formDetails}
+            onChangeTime={onChangeTime}
+            submitTask={submitTask}
+            valid={valid}
+            newDay={newDay}
+          />
+        </animated.div>
+      )}
+    </animated.div>
   );
 };
