@@ -3,3 +3,15 @@
   padding: 0.5rem 2rem;
   border-radius: 3px;
 }
+
+.time-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.tp-title {
+  opacity: 0.5;
+}

@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { Carousel } from "./Carousel/Carousel";
+import { Day } from "./Day";
+import { getRecentCurrentWeek } from "../../Utilities/getWeekObject";
 
 export const Dashboard = () => {
+  const [recentWeek, setRecentWeek] = useState<Date[]>([]);
+
+  useEffect(() => {
+    const week = getRecentCurrentWeek();
+    setRecentWeek(week);
+    console.log(recentWeek);
+  }, []);
+
   return (
     <div className="dashboard">
       <div className="dashboard-panel-main">
@@ -26,34 +36,9 @@ export const Dashboard = () => {
           <p>March 2024 | Week 1</p>
         </div>
         <div className="weekday">
-          <div className="day">
-            <p>Monday, 24th</p>
-            <p>February</p>
-          </div>
-          <div className="day">
-            <p>Tuesday, 24th</p>
-            <p>February</p>
-          </div>
-          <div className="day">
-            <p>Wednesday, 24th</p>
-            <p>February, 2024</p>
-          </div>
-          <div className="day">
-            <p>Thursday, 24th</p>
-            <p>February, 2024</p>
-          </div>
-          <div className="day">
-            <p>Friday, 24th</p>
-            <p>February, 2024</p>
-          </div>
-          <div className="day">
-            <p>Saturday, 24th</p>
-            <p>February, 2024</p>
-          </div>
-          <div className="day">
-            <p>Sunday, 24th</p>
-            <p>February, 2024</p>
-          </div>
+          {recentWeek?.map((i) => (
+            <Day date={i} />
+          ))}
         </div>
       </div>
       <div className="dashboard-panel-edit">

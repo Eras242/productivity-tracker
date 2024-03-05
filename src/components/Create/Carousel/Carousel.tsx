@@ -154,19 +154,19 @@ export const Carousel = () => {
         <h2 className="date-tag">March 6th, 2024</h2>
         <div style={{ display: "flex", flexDirection: "row", gap: "3rem" }}>
           <div className="time-preview">
-            <p>WAKE UP</p>
+            <p className="tp-title">WAKE UP</p>
             <h2>07:00</h2>
           </div>
           <div className="time-preview">
-            <p>WORK</p>
+            <p className="tp-title">WORK</p>
             <h2>10:00</h2>
           </div>
           <div className="time-preview">
-            <p>FINISH</p>
+            <p className="tp-title">FINISH</p>
             <h2>19:00</h2>
           </div>
           <div className="time-preview">
-            <p>WAKE UP</p>
+            <p className="tp-title">SLEEP</p>
             <h2>22:00</h2>
           </div>
         </div>
