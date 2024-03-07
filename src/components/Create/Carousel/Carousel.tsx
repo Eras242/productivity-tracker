@@ -7,12 +7,20 @@ import { css } from "@emotion/css";
 import { timeConverter } from "../../../Utilities/TimeConverter";
 import { Timeline } from "../../Display/Timeline/Timeline";
 import { TimelineInfoInterface } from "../../../App";
+import { TTaskDay } from "../../../Utilities/getWeekObject";
+import { MonthMap } from "../../../Utilities/getWeekObject";
+import { DayMap } from "../../../Utilities/getWeekObject";
 
 type ScreenProps = {
   bgColor: string;
 };
 
-export const Carousel = () => {
+type ICarouselProps = {
+  day: TTaskDay;
+  setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
   const [screenIndex, setScreenIndex] = useState<number>(0);
   const screens = [Wake, Start, End, Sleep, Complete];
 
@@ -24,6 +32,10 @@ export const Carousel = () => {
     } else {
       return;
     }
+  };
+
+  const handleComplete = () => {
+    setNewDay(false);
   };
 
   const [tempTimeline, setTempTimeline] = useState<TimelineInfoInterface>({
@@ -151,7 +163,6 @@ export const Carousel = () => {
     return (
       <Screen bgColor="#191919">
         Complete! Let's add some tasks!
-        <h2 className="date-tag">March 6th, 2024</h2>
         <div style={{ display: "flex", flexDirection: "row", gap: "3rem" }}>
           <div className="time-preview">
             <p className="tp-title">WAKE UP</p>
@@ -170,7 +181,7 @@ export const Carousel = () => {
             <h2>22:00</h2>
           </div>
         </div>
-        <button onClick={handleToggle}>Next</button>
+        <button onClick={handleComplete}>Add Tasks</button>
       </Screen>
     );
   }
@@ -188,6 +199,13 @@ export const Carousel = () => {
         height: "100%",
       }}
     >
+      <h2 className="date-tag">March 6th, 2024</h2>
+      <h2
+        className="date-tag"
+        style={{ position: "absolute", zIndex: "9999", top: "25%" }}
+      >
+        {day.day?.getMonth()} {day.day?.getDay()} {day.day?.getFullYear()}
+      </h2>
       <Container>
         {transitions((style, i) => {
           // const Comp = screens[i];

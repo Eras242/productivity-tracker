@@ -16,16 +16,18 @@ export type CreateProps = {
   newDay: boolean;
   formDetails: TodoStateProps;
   valid: ValidStateProps;
+  setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Create = ({
   onChangeTime,
   submitTask,
+  setNewDay,
   formDetails,
   newDay,
   valid,
 }: CreateProps) => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(true);
   const [loginVisible, setLoginVisible] = useState<boolean>(true);
 
   const containerSpring = useSpring({
@@ -65,7 +67,7 @@ export const Create = ({
         </animated.div>
       )}
 
-      {!loginVisible && <Dashboard />}
+      {!loginVisible && <Dashboard setNewDay={setNewDay} />}
       {!newDay && (
         <animated.div>
           <CreateTask

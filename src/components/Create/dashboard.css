@@ -30,10 +30,16 @@
 
 .day {
   cursor: pointer;
+  box-sizing: border-box;
   padding: 1rem;
   border-radius: 3px;
-  width: 114px;
-  border: 1px solid rgba(25, 25, 25, 1);
+  width: 148px;
+  background-color: rgba(50, 50, 50, 0);
+  transition: 300ms;
+}
+
+.day:hover {
+  background-color: rgba(50, 50, 50, 0.1);
 }
 
 .user-img {
@@ -64,4 +70,16 @@
   height: 100%;
   left: 50%;
   background-color: rgba(25, 25, 25, 1);
+}
+
+.cross {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  right: 100%;
+  background-color: red;
 }

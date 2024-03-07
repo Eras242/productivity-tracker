@@ -5,12 +5,20 @@ import { TodoStateProps } from "../../App";
 import { ValidStateProps } from "../../App";
 import { CreateProps } from "./Create";
 
+type TaskCreationProps = {
+  onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  submitTask: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  newDay: boolean;
+  formDetails: TodoStateProps;
+  valid: ValidStateProps;
+};
+
 export const CreateTask = ({
   formDetails,
   onChangeTime,
   submitTask,
   valid,
-}: CreateProps) => {
+}: TaskCreationProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const fade = useSpring({

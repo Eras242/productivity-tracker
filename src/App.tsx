@@ -269,6 +269,7 @@ function App() {
             submitTask={submitTask}
             formDetails={formDetails}
             valid={valid}
+            setNewDay={setNewDay}
           />
         </animated.div>
         <animated.div className="hello" style={{ ...displaySpring }}>

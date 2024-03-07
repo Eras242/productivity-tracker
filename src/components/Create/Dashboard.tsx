@@ -3,9 +3,36 @@ import "./dashboard.css";
 import { Carousel } from "./Carousel/Carousel";
 import { Day } from "./Day";
 import { getRecentCurrentWeek } from "../../Utilities/getWeekObject";
+import { TTaskDay } from "../../Utilities/getWeekObject";
+import { animated, useSpring, config } from "@react-spring/web";
 
-export const Dashboard = () => {
-  const [recentWeek, setRecentWeek] = useState<Date[]>([]);
+type DashboardProps = {
+  setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Dashboard = ({ setNewDay }: DashboardProps) => {
+  const [recentWeek, setRecentWeek] = useState<TTaskDay[]>([]);
+  const [selected, setSelected] = useState<TTaskDay>({
+    day: undefined,
+    id: "",
+  });
+
+  const carouselSpring = useSpring({
+    from: { transform: "translateX(100%)" },
+    to: { transform: selected.day ? "translateX(0%)" : "translateX(100%)" },
+    config: config.stiff,
+  });
+
+  const handleSelected = (day: TTaskDay) => {
+    if (selected?.id == day!.id) {
+      setSelected({
+        day: undefined,
+        id: "",
+      });
+    } else {
+      setSelected(day);
+    }
+  };
 
   useEffect(() => {
     const week = getRecentCurrentWeek();
@@ -33,15 +60,18 @@ export const Dashboard = () => {
 
         <div className="time-tag dash-header">
           {" "}
-          <p>March 2024 | Week 1</p>
+          <p>This Week | March 2024</p>
         </div>
         <div className="weekday">
           {recentWeek?.map((i) => (
-            <Day date={i} />
+            <Day day={i} selected={selected} handleSelected={handleSelected} />
           ))}
         </div>
       </div>
-      <div className="dashboard-panel-edit">
+      <animated.div
+        style={{ ...carouselSpring }}
+        className="dashboard-panel-edit"
+      >
         <div
           style={{
             width: "100%",
@@ -52,9 +82,9 @@ export const Dashboard = () => {
             borderTopRightRadius: "0.5rem",
           }}
         >
-          <Carousel />
+          <Carousel day={selected} setNewDay={setNewDay} />
         </div>
-      </div>
+      </animated.div>
     </div>
   );
 };
