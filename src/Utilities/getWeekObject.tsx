@@ -27,18 +27,18 @@ type TMonthMap = {
   [key: number]: string;
 };
 
-export type TTaskDay = {
+export type TDay = {
   day: Date | undefined;
   id: string;
 };
 
-export const getRecentCurrentWeek = (): TTaskDay[] => {
+export const getRecentCurrentWeek = (): TDay[] => {
   const today = new Date();
   const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
   const monday = new Date(today); // Clone today's date
   monday.setDate(today.getDate() - currentDay + 1); // Set to Monday of the current week
 
-  const weekDays: TTaskDay[] = [];
+  const weekDays: TDay[] = [];
   for (let i = 0; i < 7; i++) {
     const day = new Date(monday);
     day.setDate(monday.getDate() + i);

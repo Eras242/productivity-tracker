@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { TodoStateProps } from "../../App";
 import { ValidStateProps } from "../../App";
-import { CreateProps } from "./Create";
+import { CreateProps } from "./ManagerPanel";
 
 type TaskCreationProps = {
   onChangeTime: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,11 +18,21 @@ export const CreateTask = ({
   onChangeTime,
   submitTask,
   valid,
+  newDay,
 }: TaskCreationProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const fade = useSpring({
     opacity: isVisible ? 1 : 0,
+  });
+  const creationSpring = useSpring({
+    from: {
+      opacity: "0",
+    },
+    to: {
+      opacity: !newDay ? "1" : "0",
+    },
+    delay: 100,
   });
 
   useEffect(() => {
@@ -38,7 +48,10 @@ export const CreateTask = ({
   }, [valid]);
 
   return (
-    <div>
+    <animated.div
+      className="task-creation"
+      style={{ ...creationSpring, transform: "transformY(-50%)" }}
+    >
       <h1>Add Todo</h1>
       <form action="">
         <div className="title-time">
@@ -56,6 +69,6 @@ export const CreateTask = ({
           <p>{valid["message"]}</p>
         </animated.div>
       </form>
-    </div>
+    </animated.div>
   );
 };

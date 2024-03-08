@@ -30,6 +30,9 @@
 
 .day {
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   box-sizing: border-box;
   padding: 1rem;
   border-radius: 3px;

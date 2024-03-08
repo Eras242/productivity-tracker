@@ -6,8 +6,8 @@ import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { timeConverter } from "../../../Utilities/TimeConverter";
 import { Timeline } from "../../Display/Timeline/Timeline";
-import { TimelineInfoInterface } from "../../../App";
-import { TTaskDay } from "../../../Utilities/getWeekObject";
+import { TTimeline } from "../../../App";
+import { TDay } from "../../../Utilities/getWeekObject";
 import { MonthMap } from "../../../Utilities/getWeekObject";
 import { DayMap } from "../../../Utilities/getWeekObject";
 
@@ -16,13 +16,17 @@ type ScreenProps = {
 };
 
 type ICarouselProps = {
-  day: TTaskDay;
+  day: TDay;
   setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
   const [screenIndex, setScreenIndex] = useState<number>(0);
   const screens = [Wake, Start, End, Sleep, Complete];
+
+  useEffect(() => {
+    setScreenIndex(0);
+  }, [day]);
 
   const [error, setError] = useState({ error: false, message: "" });
 
@@ -38,7 +42,7 @@ export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
     setNewDay(false);
   };
 
-  const [tempTimeline, setTempTimeline] = useState<TimelineInfoInterface>({
+  const [tempTimeline, setTempTimeline] = useState<TTimeline>({
     wakeUp: 0,
     start: 0,
     end: 0,
@@ -204,7 +208,8 @@ export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
         className="date-tag"
         style={{ position: "absolute", zIndex: "9999", top: "25%" }}
       >
-        {day.day?.getMonth()} {day.day?.getDay()} {day.day?.getFullYear()}
+        {day.day?.getDate()} {day.day?.getMonth()} {day.day?.getDay()}{" "}
+        {day.day?.getFullYear()}
       </h2>
       <Container>
         {transitions((style, i) => {

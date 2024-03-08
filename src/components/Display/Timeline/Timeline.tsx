@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TimelineInfoInterface, TodoStateProps } from "../../../App";
+import { TTimeline, TodoStateProps } from "../../../App";
 import { getDuration, timeConverter } from "../../../Utilities/TimeConverter";
 import { timePercentage } from "../../../Utilities/TimeConverter";
 import { TaskDot } from "./TaskDot";
@@ -8,7 +8,7 @@ import { css } from "@emotion/css";
 
 type TimelineProps = {
   tasks: TodoStateProps[];
-  timelineInfo: TimelineInfoInterface;
+  timelineInfo: TTimeline;
 };
 
 type timeCountType = {

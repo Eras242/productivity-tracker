@@ -1,10 +1,6 @@
 import React, { ReactNode } from "react";
 import { Task } from "../Task/Task";
-import {
-  FilterInterface,
-  TimelineInfoInterface,
-  TodoStateProps,
-} from "../../App";
+import { FilterInterface, TTimeline, TodoStateProps } from "../../App";
 import "./display.css";
 import { Timeline } from "./Timeline/Timeline";
 import { timeConverter } from "../../Utilities/TimeConverter";
@@ -20,7 +16,7 @@ type DisplayProps = {
   handleClearAll: () => void;
   filter: FilterInterface;
   handleFilter: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  timelineInfo: TimelineInfoInterface;
+  timelineInfo: TTimeline;
 };
 
 export const Display = ({

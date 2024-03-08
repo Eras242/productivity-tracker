@@ -3,27 +3,33 @@ import "./dashboard.css";
 import { Carousel } from "./Carousel/Carousel";
 import { Day } from "./Day";
 import { getRecentCurrentWeek } from "../../Utilities/getWeekObject";
-import { TTaskDay } from "../../Utilities/getWeekObject";
+import { TDay } from "../../Utilities/getWeekObject";
 import { animated, useSpring, config } from "@react-spring/web";
+import { TTaskDay } from "../../Contexts/TasksContext";
 
 type DashboardProps = {
   setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
+  currentWeek: TTaskDay[];
 };
 
-export const Dashboard = ({ setNewDay }: DashboardProps) => {
-  const [recentWeek, setRecentWeek] = useState<TTaskDay[]>([]);
+export const Dashboard = ({ setNewDay, currentWeek }: DashboardProps) => {
+  const [recentWeek, setRecentWeek] = useState<TDay[]>([]);
   const [selected, setSelected] = useState<TTaskDay>({
-    day: undefined,
     id: "",
+    user: null,
+    date: undefined,
+    timeline: null,
+    tasks: [],
   });
 
   const carouselSpring = useSpring({
     from: { transform: "translateX(100%)" },
-    to: { transform: selected.day ? "translateX(0%)" : "translateX(100%)" },
+    to: { transform: selected.date ? "translateX(0%)" : "translateX(100%)" },
     config: config.stiff,
+    reset: true,
   });
 
-  const handleSelected = (day: TTaskDay) => {
+  const handleSelected = (day: TDay) => {
     if (selected?.id == day!.id) {
       setSelected({
         day: undefined,
@@ -37,12 +43,16 @@ export const Dashboard = ({ setNewDay }: DashboardProps) => {
   useEffect(() => {
     const week = getRecentCurrentWeek();
     setRecentWeek(week);
-    console.log(recentWeek);
+    console.log("Hello");
+    console.log(currentWeek);
   }, []);
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-panel-main">
+    <animated.div
+      style={{ translateY: "translateY(-100%)" }}
+      className="dashboard"
+    >
+      <animated.div className="dashboard-panel-main">
         <div className="headings">
           {" "}
           <div>
@@ -63,11 +73,18 @@ export const Dashboard = ({ setNewDay }: DashboardProps) => {
           <p>This Week | March 2024</p>
         </div>
         <div className="weekday">
-          {recentWeek?.map((i) => (
-            <Day day={i} selected={selected} handleSelected={handleSelected} />
+          {currentWeek?.map((i) => (
+            <Day
+              key={i.id}
+              id={i.id}
+              day={i.date}
+              tasks={i.tasks}
+              selected={selected}
+              handleSelected={handleSelected}
+            />
           ))}
         </div>
-      </div>
+      </animated.div>
       <animated.div
         style={{ ...carouselSpring }}
         className="dashboard-panel-edit"
@@ -85,6 +102,6 @@ export const Dashboard = ({ setNewDay }: DashboardProps) => {
           <Carousel day={selected} setNewDay={setNewDay} />
         </div>
       </animated.div>
-    </div>
+    </animated.div>
   );
 };

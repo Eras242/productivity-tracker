@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { DayMap } from "../../Utilities/getWeekObject";
-import { TTaskDay } from "../../Utilities/getWeekObject";
+import { TDay } from "../../Utilities/getWeekObject";
 import { useSpring, animated } from "@react-spring/web";
+import styled from "@emotion/styled";
 
 type TDayProps = {
-  day: TTaskDay;
-  selected: TTaskDay;
-  handleSelected: (day: TTaskDay) => void;
+  day: TDay;
+  selected: TDay;
+  handleSelected: (day: TDay) => void;
 };
 
 export const Day = ({ day, selected, handleSelected }: TDayProps) => {
@@ -21,6 +22,18 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
     config: { duration: 100 },
   });
 
+  const Dot = styled("div")`
+    display: flex;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: green;
+  `;
+
+  const TaskDot = () => {
+    return <Dot></Dot>;
+  };
+
   return (
     <>
       <animated.div
@@ -32,6 +45,21 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
         <p>
           {day.day!.getDate()}th {"March"}, {"2024"}
         </p>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            gap: ".5rem",
+            alignItems: "center",
+          }}
+        >
+          <TaskDot />
+          <TaskDot />
+          <TaskDot />
+          <TaskDot />
+          <TaskDot />
+          <TaskDot />
+        </div>
       </animated.div>
     </>
   );

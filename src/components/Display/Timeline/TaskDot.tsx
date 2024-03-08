@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { TodoStateProps } from "../../../App";
 import { timePercentage } from "../../../Utilities/TimeConverter";
 import { timeConverter } from "../../../Utilities/TimeConverter";
-import { TimelineInfoInterface } from "../../../App";
+import { TTimeline } from "../../../App";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 
 interface TaskDotInterface {
   task: TodoStateProps;
-  info: TimelineInfoInterface;
+  info: TTimeline;
 }
 
 export const TaskDot = ({ task, info }: TaskDotInterface) => {

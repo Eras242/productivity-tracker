@@ -1,11 +1,11 @@
 import React from "react";
-import { TimelineInfoInterface } from "../../App";
+import { TTimeline } from "../../App";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 
 interface TimelineFormProps {
   onChangeTimelineForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  timelineInfo: TimelineInfoInterface;
+  timelineInfo: TTimeline;
 }
 
 export const TimelineForm = ({

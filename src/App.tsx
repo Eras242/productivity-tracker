@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Timeline } from "./components/Display/Timeline/Timeline";
-import { Create } from "./components/Create/Create";
+import { ManagerPanel } from "./components/Create/ManagerPanel";
 import { Display } from "./components/Display/Display";
 import { timeConverter } from "./Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { useSpring, animated, config } from "@react-spring/web";
 import { Login } from "./components/Login/Login";
+import { Dashboard } from "./components/Create/Dashboard";
+import { useUserContext } from "./Contexts/UserContext";
+import { CreateTask } from "./components/Create/CreateTask";
+import { useTasksContext } from "./Contexts/TasksContext";
 
 const { v4 } = require("uuid");
 
@@ -29,13 +33,13 @@ export interface FilterInterface {
   complete: boolean;
 }
 
-export interface TimelineInfoInterface {
+export type TTimeline = {
   wakeUp: number | null;
   start: number | null;
   end: number | null;
   sleep: number | null;
   [key: string]: any;
-}
+};
 
 const testTasks = [
   {
@@ -98,17 +102,21 @@ function App() {
     message: "",
   });
 
+  const {
+    user,
+    loggedIn,
+    setLoggedIn,
+    handleLogin,
+    loginVisible,
+    setLoginVisible,
+  } = useUserContext();
+
+  const { currentWeek } = useTasksContext();
+
   const divSpring = useSpring({
     from: { transform: "translateY(0px)" },
     to: { transform: newDay ? "translateY(0px)" : "translateY(-100px)" },
     delay: newDay ? 0 : 100,
-  });
-  const createSpring = useSpring({
-    from: { transform: "translateX(-525px)" },
-    to: {
-      transform: newDay ? "translateX(-525px)" : "translateX(-633px)",
-      delay: newDay ? 0 : 200,
-    },
   });
 
   const displaySpring = useSpring({
@@ -130,19 +138,7 @@ function App() {
   });
 
   // timelineInfo is a minute count conversion of the 24 Hour time provided ("12:24" -> 744)
-  const [timelineInfo, setTimelineDetails] =
-    useState<TimelineInfoInterface>(testTimeline);
-
-  function onChangeTimelineForm(e: React.ChangeEvent<HTMLInputElement>) {
-    let time: string | string[] = e.target.value;
-    time = time.split(":");
-    const minuteCount = parseInt(time[0]) * 60 + Number(time[1]);
-    setTimelineDetails((prev) => ({
-      ...prev,
-      [e.target.name]: minuteCount,
-    }));
-    // validateTimelineEntries(e.target.name, minuteCount);
-  }
+  const [timelineInfo, setTimelineDetails] = useState<TTimeline>(testTimeline);
 
   function onChangeTime(e: React.ChangeEvent<HTMLInputElement>) {
     setFormDetails((prev) =>
@@ -260,18 +256,26 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Login /> */}
       <animated.div className="task-creation-display" style={{ ...divSpring }}>
-        <animated.div style={{ ...createSpring }}>
-          <Create
-            newDay={newDay}
-            onChangeTime={onChangeTime}
-            submitTask={submitTask}
-            formDetails={formDetails}
-            valid={valid}
-            setNewDay={setNewDay}
-          />
-        </animated.div>
+        <ManagerPanel newDay={newDay}>
+          {loginVisible && (
+            <Login
+              loggedIn={loggedIn}
+              handleLogin={handleLogin}
+              setLoginVisible={setLoginVisible}
+            />
+          )}
+          {!loginVisible && <Dashboard setNewDay={setNewDay} currentWeek={currentWeek} />}
+          {!newDay && (
+            <CreateTask
+              formDetails={formDetails}
+              onChangeTime={onChangeTime}
+              submitTask={submitTask}
+              valid={valid}
+              newDay={newDay}
+            />
+          )}
+        </ManagerPanel>
         <animated.div className="hello" style={{ ...displaySpring }}>
           <Display
             tasks={displayTasks}

@@ -4,9 +4,15 @@ import "./login.css";
 
 type LoginProps = {
   loggedIn: boolean;
+  handleLogin: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  setLoginVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const Login = ({ loggedIn }: LoginProps) => {
+export const Login = ({
+  loggedIn,
+  handleLogin,
+  setLoginVisible,
+}: LoginProps) => {
   const loginSpring = useSpring({
     from: { width: "50%" },
     to: { width: loggedIn ? "100%" : "50%" },
@@ -21,8 +27,17 @@ export const Login = ({ loggedIn }: LoginProps) => {
     to: { transform: loggedIn ? "TranslateX(-200%)" : "TranslateX(0%)" },
   });
 
+  const loginFade = useSpring({
+    from: { opacity: 1 },
+    to: { opacity: loggedIn ? 0 : 1 },
+    delay: 200,
+    onRest: () => {
+      loggedIn ? setLoginVisible(false) : setLoginVisible(true);
+    },
+  });
+
   return (
-    <div className="Login">
+    <animated.div className="Login" style={{ ...loginFade }}>
       <animated.div style={{ ...loginSpring }} className="login-panel">
         <animated.div style={{ ...formSpring }} className="Login-form">
           <form className="Login-form" action="">
@@ -31,7 +46,9 @@ export const Login = ({ loggedIn }: LoginProps) => {
             <input type="password" placeholder="Password" />
             <div className="login-sign-up-buttons">
               {" "}
-              <button className="btn-login">Login</button>
+              <button className="btn-login" onClick={handleLogin}>
+                Login
+              </button>
               <button className="btn-login">Sign Up</button>
             </div>
             <div className="login-line"></div>
@@ -50,6 +67,6 @@ export const Login = ({ loggedIn }: LoginProps) => {
           alt=""
         /> */}
       </animated.div>
-    </div>
+    </animated.div>
   );
 };
