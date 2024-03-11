@@ -134,7 +134,7 @@ function App() {
               setLoginVisible={setLoginVisible}
             />
           )}
-          {!loginVisible && (
+          {!loginVisible && !taskActive && (
             <Dashboard
               taskActive={taskActive}
               setTaskActive={setTaskActive}
@@ -167,12 +167,12 @@ function App() {
         </animated.div>
       </animated.div>
       <animated.div style={{ ...timelineSpring }}>
-        {/* {taskActive && (
+        {taskActive && (
           <Timeline
             tasks={selectedDay && selectedDay.tasks}
             timelineInfo={timelineInfo}
           />
-        )} */}
+        )}
       </animated.div>
     </div>
   );

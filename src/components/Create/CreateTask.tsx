@@ -6,6 +6,7 @@ import { CreateProps } from "./ManagerPanel";
 import { TTaskDay } from "../../Contexts/TasksContext";
 import { TTask } from "../../Contexts/TasksContext";
 import { v4 } from "uuid";
+import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -130,10 +131,12 @@ TaskCreationProps) => {
         <button className="btn-icon" onClick={handleBack}>
           back
         </button>
-        <p>{JSON.stringify(selectedDay?.date?.getDate())}</p>
+        <h2 className="date-box">
+          {DayMap[selectedDay!.date?.getDay()!]} {selectedDay!.date?.getDate()!}{" "}
+          {MonthMap[selectedDay!.date?.getMonth()!]}
+        </h2>
       </div>
       <h1>Add Todo</h1>
-      <p>{selectedDay?.id}</p>
       <form action="">
         <div className="title-time">
           <input

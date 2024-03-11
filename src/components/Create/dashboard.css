@@ -86,3 +86,13 @@
   height: 20px;
   left: 100%;
 }
+
+.date-box {
+  display: flex;
+  box-sizing: border-box;
+  padding: .5rem 2rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(50, 50, 50, 0.5);
+  border-radius: 5px;
+}

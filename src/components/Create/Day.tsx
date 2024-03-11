@@ -41,14 +41,13 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
       <animated.div
         className="day"
         onClick={() => handleSelected(day)}
-        style={daySpring}
+        style={{ ...daySpring, opacity: day.initialized ? 1 : 0.5 }}
       >
         <div className="cross">+</div>
         <p>{day.date?.getDate()}</p>
         <p>
           {day.date?.getDate()}th {"March"}, {"2024"}
         </p>
-        <p>INIT: {JSON.stringify(day.initialized)}</p>
         <div
           style={{
             height: "100%",
