@@ -1,35 +1,115 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Task } from "../Task/Task";
-import { FilterInterface, TTimeline, TodoStateProps } from "../../App";
+import { FilterInterface, TTimeline } from "../../App";
+import { TTask } from "../../Contexts/TasksContext";
 import "./display.css";
 import { Timeline } from "./Timeline/Timeline";
 import { timeConverter } from "../../Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
+import { TTaskDay } from "../../Contexts/TasksContext";
 
 type DisplayProps = {
-  tasks: TodoStateProps[];
-  logId: (id: string) => void;
-  handleCheck: (id: string) => void;
-  handleMarkAllComplete: () => void;
-  handleClearComplete: () => void;
-  handleClearAll: () => void;
-  filter: FilterInterface;
-  handleFilter: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedDay: TTaskDay | null;
+  setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
   timelineInfo: TTimeline;
 };
 
+type Tfilter = {
+  all: boolean;
+  unfinished: boolean;
+  complete: boolean;
+};
+
 export const Display = ({
-  tasks,
-  logId,
-  handleCheck,
-  handleMarkAllComplete,
-  handleClearAll,
-  handleClearComplete,
-  filter,
-  handleFilter,
+  selectedDay,
+  setSelectedDay,
   timelineInfo,
 }: DisplayProps) => {
+  const [filter, setFilter] = useState<Tfilter>({
+    all: true,
+    unfinished: false,
+    complete: false,
+  });
+  const [displayTasks, setDisplayTasks] = useState<TTask[]>([]);
+
+  useEffect(() => {
+    if (selectedDay) {
+      if (filter.all) {
+        setDisplayTasks(selectedDay.tasks);
+      } else if (filter.unfinished) {
+        setDisplayTasks(selectedDay.tasks.filter((t) => t.completed == false));
+      } else if (filter.complete) {
+        setDisplayTasks(selectedDay.tasks.filter((t) => t.completed == true));
+      }
+    }
+  }, [filter, displayTasks]);
+
+  function handleFilter(e: React.ChangeEvent<HTMLInputElement>) {
+    // Set all to false first
+
+    // Set all in filter to false except selceted
+    const resetFilter: FilterInterface = {
+      all: false,
+      unfinished: false,
+      complete: false,
+    };
+
+    setFilter(resetFilter);
+
+    setFilter((prev) => ({ ...prev, [e.target.name]: true }));
+  }
+
+  const handleCheck = (id: string) => {
+    if (selectedDay) {
+      const i = selectedDay.tasks.findIndex((t) => t.id == id);
+
+      if (i !== -1) {
+        const updatedTasks = [...selectedDay.tasks];
+
+        updatedTasks[i] = {
+          ...updatedTasks[i],
+          completed: !updatedTasks[i].completed,
+        };
+
+        setSelectedDay((prev) => ({ ...prev!, tasks: updatedTasks }));
+      }
+
+      setSelectedDay((prev) => ({ ...prev! }));
+    }
+  };
+
+  const handleMarkAllComplete = () => {
+    if (selectedDay) {
+      if (selectedDay.tasks.length == 0) {
+        return;
+      }
+
+      const updatedTasks = selectedDay.tasks.map((t) => ({
+        ...t,
+        completed: true,
+      }));
+      setSelectedDay((prev) => ({ ...prev!, tasks: updatedTasks }));
+    }
+  };
+
+  const handleClearComplete = () => {
+    if (selectedDay) {
+      if (selectedDay.tasks.length == 0) {
+        return;
+      }
+
+      const updatedTasks = selectedDay.tasks.filter(
+        (t) => t.completed !== true
+      );
+      setSelectedDay((prev) => ({ ...prev!, tasks: updatedTasks }));
+    }
+  };
+
+  const handleClearAll = () => {
+    setSelectedDay((prev) => ({ ...prev!, tasks: [] }));
+  };
+
   return (
     <div className="container display-todos">
       <div className="display-header">
@@ -64,24 +144,24 @@ export const Display = ({
             />
             <label htmlFor="complete">COMPLETE</label>
           </div>
-          <p>{tasks.length} Items</p>
+          <p>{selectedDay && selectedDay.tasks.length} Items</p>
         </div>
       </div>
       <div className="task-items-container">
         {" "}
-        {tasks.map((t) => {
-          return (
-            <Task
-              key={t.id}
-              id={t.id}
-              title={t.title}
-              time={t.time}
-              completed={t.completed}
-              logId={logId}
-              handleCheck={handleCheck}
-            />
-          );
-        })}
+        {selectedDay &&
+          selectedDay.tasks.map((t) => {
+            return (
+              <Task
+                key={t.id}
+                id={t.id}
+                title={t.title}
+                time={t.time}
+                completed={t.completed}
+                handleCheck={handleCheck}
+              />
+            );
+          })}
       </div>
       <div className="complete-list">
         <button onClick={handleMarkAllComplete}>Mark All Complete</button>

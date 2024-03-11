@@ -3,11 +3,13 @@ import { DayMap } from "../../Utilities/getWeekObject";
 import { TDay } from "../../Utilities/getWeekObject";
 import { useSpring, animated } from "@react-spring/web";
 import styled from "@emotion/styled";
+import { TTimeline } from "../../App";
+import { TTask, TTaskDay } from "../../Contexts/TasksContext";
 
 type TDayProps = {
-  day: TDay;
-  selected: TDay;
-  handleSelected: (day: TDay) => void;
+  day: TTaskDay;
+  selected: TTaskDay | null;
+  handleSelected: (day: TTaskDay) => void;
 };
 
 export const Day = ({ day, selected, handleSelected }: TDayProps) => {
@@ -15,8 +17,8 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
     from: { border: "1px solid rgba(25, 25, 25, 1)" },
     to: {
       outline:
-        selected!.id == day.id
-          ? "2px solid rgba(50, 50, 50, 1)"
+        selected == day
+          ? "1px solid rgba(50, 50, 50, 1)"
           : "1px solid rgba(25, 25, 25, 1)",
     },
     config: { duration: 100 },
@@ -39,12 +41,14 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
       <animated.div
         className="day"
         onClick={() => handleSelected(day)}
-        style={{ ...daySpring }}
+        style={daySpring}
       >
-        <p>{DayMap[day.day!.getDay()]}</p>
+        <div className="cross">+</div>
+        <p>{day.date?.getDate()}</p>
         <p>
-          {day.day!.getDate()}th {"March"}, {"2024"}
+          {day.date?.getDate()}th {"March"}, {"2024"}
         </p>
+        <p>INIT: {JSON.stringify(day.initialized)}</p>
         <div
           style={{
             height: "100%",
@@ -53,12 +57,9 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
             alignItems: "center",
           }}
         >
-          <TaskDot />
-          <TaskDot />
-          <TaskDot />
-          <TaskDot />
-          <TaskDot />
-          <TaskDot />
+          {day.tasks.map((i) => (
+            <TaskDot />
+          ))}
         </div>
       </animated.div>
     </>

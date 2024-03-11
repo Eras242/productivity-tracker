@@ -9,7 +9,6 @@ type TaskProps = {
   time: string | number;
   completed: boolean;
   id: string;
-  logId: (id: string) => void;
   handleCheck: (id: string) => void;
 };
 
@@ -17,7 +16,6 @@ export const Task = ({
   title,
   time,
   completed,
-  logId,
   id,
   handleCheck,
 }: TaskProps) => {

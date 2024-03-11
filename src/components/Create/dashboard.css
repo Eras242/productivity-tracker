@@ -37,12 +37,14 @@
   padding: 1rem;
   border-radius: 3px;
   width: 148px;
-  background-color: rgba(50, 50, 50, 0);
+  background-color: rgba(50, 50, 50, 0.1);
+  border: 1px solid rgba(50, 50, 50, 0);
   transition: 300ms;
 }
 
 .day:hover {
-  background-color: rgba(50, 50, 50, 0.1);
+  background-color: rgba(50, 50, 50, 0.25);
+  border: 1px solid rgba(50, 50, 50, 1);
 }
 
 .user-img {
@@ -76,13 +78,11 @@
 }
 
 .cross {
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   width: 20px;
   height: 20px;
-  right: 100%;
-  background-color: red;
+  left: 100%;
 }

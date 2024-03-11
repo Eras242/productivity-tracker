@@ -22,11 +22,6 @@ export type TodoStateProps = {
   completed: boolean;
 };
 
-export type ValidStateProps = {
-  valid: boolean;
-  message: string;
-};
-
 export interface FilterInterface {
   all: boolean;
   unfinished: boolean;
@@ -82,25 +77,7 @@ const testTimeline = {
 };
 
 function App() {
-  const [formDetails, setFormDetails] = useState<TodoStateProps>({
-    id: "",
-    title: "",
-    time: "",
-    completed: false,
-  });
-
-  const [newDay, setNewDay] = useState<boolean>(true);
-  const [tasks, setTasks] = useState<TodoStateProps[]>(testTasks);
-  const [filter, setFilter] = useState({
-    all: true,
-    unfinished: false,
-    complete: false,
-  });
-  const [displayTasks, setDisplayTasks] = useState<TodoStateProps[]>([]);
-  const [valid, setValid] = useState<ValidStateProps>({
-    valid: true,
-    message: "",
-  });
+  const [timelineInfo, setTimelineDetails] = useState<TTimeline>(testTimeline);
 
   const {
     user,
@@ -111,153 +88,45 @@ function App() {
     setLoginVisible,
   } = useUserContext();
 
-  const { currentWeek } = useTasksContext();
+  const {
+    currentWeek,
+    selectedDay,
+    setSelectedDay,
+    taskActive,
+    setTaskActive,
+    initDay,
+    // tasks,
+    // setTasks,
+  } = useTasksContext();
 
   const divSpring = useSpring({
     from: { transform: "translateY(0px)" },
-    to: { transform: newDay ? "translateY(0px)" : "translateY(-100px)" },
-    delay: newDay ? 0 : 100,
+    to: { transform: taskActive ? "translateY(-100px)" : "translateY(0px)" },
+    delay: taskActive ? 100 : 0,
   });
 
   const displaySpring = useSpring({
     from: { transform: "translateX(633px)", opacity: 0 },
     to: {
-      transform: newDay ? "translateX(633px)" : "translateX(-17px)",
-      opacity: newDay ? 0 : 1,
+      transform: taskActive ? "translateX(-17px)" : "translateX(633px)",
+      opacity: taskActive ? 1 : 0,
     },
-    delay: newDay ? 0 : 300,
+    delay: taskActive ? 300 : 0,
   });
 
   const timelineSpring = useSpring({
     from: { transform: "translateY(400px)", opacity: 0 },
     to: {
-      transform: newDay ? "translateY(400px)" : "translateY(216px)",
-      opacity: newDay ? 0 : 1,
+      transform: taskActive ? "translateY(216px)" : "translateY(400px)",
+      opacity: taskActive ? 1 : 0,
     },
-    delay: newDay ? 0 : 300,
+    delay: taskActive ? 300 : 0,
   });
-
-  // timelineInfo is a minute count conversion of the 24 Hour time provided ("12:24" -> 744)
-  const [timelineInfo, setTimelineDetails] = useState<TTimeline>(testTimeline);
-
-  function onChangeTime(e: React.ChangeEvent<HTMLInputElement>) {
-    setFormDetails((prev) =>
-      e.target.name === "title"
-        ? {
-            ...prev,
-            [e.target.name]: e.target.value,
-            completed: false,
-            id: v4(),
-          }
-        : {
-            ...prev,
-            [e.target.name]: e.target.value,
-
-            completed: false,
-            id: v4(),
-          }
-    );
-    console.log(tasks);
-  }
-
-  async function submitTask(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    e.preventDefault();
-
-    if (formDetails["title"] == "") {
-      setValid({ valid: false, message: "- Please enter a valid title -" });
-      return;
-    } else if (formDetails["time"] == "") {
-      setValid({ valid: false, message: "- Please enter a valid time -" });
-      return;
-    }
-
-    setValid({ valid: true, message: "" });
-    setTasks((prev) => [...prev, formDetails]);
-    setFormDetails({
-      id: "",
-      title: "",
-      time: "",
-      completed: false,
-    });
-
-    console.log(tasks);
-  }
-
-  const logId = (id: string) => {
-    console.log(`Hello World this is my Id: ${id}`);
-  };
-
-  useEffect(() => {
-    if (filter.all) {
-      setDisplayTasks(tasks);
-    } else if (filter.unfinished) {
-      setDisplayTasks(tasks.filter((t) => t.completed == false));
-    } else if (filter.complete) {
-      setDisplayTasks(tasks.filter((t) => t.completed == true));
-    }
-  }, [filter, tasks]);
-  function handleFilter(e: React.ChangeEvent<HTMLInputElement>) {
-    // Set all to false first
-
-    // Set all in filter to false except selceted
-    const resetFilter: FilterInterface = {
-      all: false,
-      unfinished: false,
-      complete: false,
-    };
-
-    setFilter(resetFilter);
-
-    setFilter((prev) => ({ ...prev, [e.target.name]: true }));
-
-    console.log(filter);
-  }
-
-  const handleCheck = (id: string) => {
-    const i = tasks.findIndex((t) => t.id == id);
-
-    if (i !== -1) {
-      const updatedTasks = [...tasks];
-
-      updatedTasks[i] = {
-        ...updatedTasks[i],
-        completed: !updatedTasks[i].completed,
-      };
-
-      setTasks(updatedTasks);
-    }
-
-    setTasks((prev) => [...prev]);
-  };
-
-  const handleMarkAllComplete = () => {
-    if (tasks.length == 0) {
-      return;
-    }
-
-    const updatedTasks = tasks.map((t) => ({ ...t, completed: true }));
-    setTasks(updatedTasks);
-  };
-
-  const handleClearComplete = () => {
-    if (tasks.length == 0) {
-      return;
-    }
-
-    const updatedTasks = tasks.filter((t) => t.completed !== true);
-    setTasks(updatedTasks);
-  };
-
-  const handleClearAll = () => {
-    setTasks([]);
-  };
 
   return (
     <div className="App">
       <animated.div className="task-creation-display" style={{ ...divSpring }}>
-        <ManagerPanel newDay={newDay}>
+        <ManagerPanel taskActive={taskActive}>
           {loginVisible && (
             <Login
               loggedIn={loggedIn}
@@ -265,40 +134,46 @@ function App() {
               setLoginVisible={setLoginVisible}
             />
           )}
-          {!loginVisible && <Dashboard setNewDay={setNewDay} currentWeek={currentWeek} />}
-          {!newDay && (
+          {!loginVisible && (
+            <Dashboard
+              taskActive={taskActive}
+              setTaskActive={setTaskActive}
+              currentWeek={currentWeek}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              initDay={initDay}
+            />
+          )}
+          {taskActive && (
             <CreateTask
-              formDetails={formDetails}
-              onChangeTime={onChangeTime}
-              submitTask={submitTask}
-              valid={valid}
-              newDay={newDay}
+              setTaskActive={setTaskActive}
+              taskActive={taskActive}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              // setTasks={setTasks}
             />
           )}
         </ManagerPanel>
-        <animated.div className="hello" style={{ ...displaySpring }}>
-          <Display
-            tasks={displayTasks}
-            logId={logId}
-            handleCheck={handleCheck}
-            handleMarkAllComplete={handleMarkAllComplete}
-            handleClearAll={handleClearAll}
-            handleClearComplete={handleClearComplete}
-            filter={filter}
-            handleFilter={handleFilter}
-            timelineInfo={timelineInfo}
-          />
+        <animated.div style={{ ...displaySpring }}>
+          {taskActive && (
+            <Display
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              // setTasks={setTasks}
+              // tasks={tasks}
+              timelineInfo={timelineInfo}
+            />
+          )}
         </animated.div>
       </animated.div>
       <animated.div style={{ ...timelineSpring }}>
-        {!newDay ? <Timeline tasks={tasks} timelineInfo={timelineInfo} /> : ""}
+        {/* {taskActive && (
+          <Timeline
+            tasks={selectedDay && selectedDay.tasks}
+            timelineInfo={timelineInfo}
+          />
+        )} */}
       </animated.div>
-      <button
-        style={{ position: "absolute", left: 0, bottom: 0 }}
-        onClick={() => setNewDay(!newDay)}
-      >
-        Show UI: {JSON.stringify(newDay)}
-      </button>
     </div>
   );
 }

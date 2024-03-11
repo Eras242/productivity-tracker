@@ -5,9 +5,10 @@ import { timePercentage } from "../../../Utilities/TimeConverter";
 import { TaskDot } from "./TaskDot";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
+import { TTask } from "../../../Contexts/TasksContext";
 
 type TimelineProps = {
-  tasks: TodoStateProps[];
+  tasks: TTask[] | null;
   timelineInfo: TTimeline;
 };
 
@@ -83,7 +84,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
         {/* <div className="timeline day-scrubber"></div> */}
         <div className="timeline task-dot-container">
           {" "}
-          {tasks.map((t) => {
+          {tasks!.map((t) => {
             return <TaskDot task={t} info={timelineInfo} />;
           })}
         </div>

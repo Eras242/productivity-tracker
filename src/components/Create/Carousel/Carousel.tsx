@@ -10,17 +10,19 @@ import { TTimeline } from "../../../App";
 import { TDay } from "../../../Utilities/getWeekObject";
 import { MonthMap } from "../../../Utilities/getWeekObject";
 import { DayMap } from "../../../Utilities/getWeekObject";
+import { TTask, TTaskDay } from "../../../Contexts/TasksContext";
 
 type ScreenProps = {
   bgColor: string;
 };
 
 type ICarouselProps = {
-  day: TDay;
-  setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
+  day: TTaskDay | null;
+  initDay: () => boolean;
+  setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
+export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
   const [screenIndex, setScreenIndex] = useState<number>(0);
   const screens = [Wake, Start, End, Sleep, Complete];
 
@@ -39,7 +41,8 @@ export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
   };
 
   const handleComplete = () => {
-    setNewDay(false);
+    initDay();
+    setTaskActive(true);
   };
 
   const [tempTimeline, setTempTimeline] = useState<TTimeline>({
@@ -208,8 +211,8 @@ export const Carousel = ({ day, setNewDay }: ICarouselProps) => {
         className="date-tag"
         style={{ position: "absolute", zIndex: "9999", top: "25%" }}
       >
-        {day.day?.getDate()} {day.day?.getMonth()} {day.day?.getDay()}{" "}
-        {day.day?.getFullYear()}
+        {day?.date!.getDate()} {day?.date?.getMonth()} {day?.date?.getDay()}{" "}
+        {day?.date?.getFullYear()}
       </h2>
       <Container>
         {transitions((style, i) => {

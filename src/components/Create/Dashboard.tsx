@@ -8,44 +8,39 @@ import { animated, useSpring, config } from "@react-spring/web";
 import { TTaskDay } from "../../Contexts/TasksContext";
 
 type DashboardProps = {
-  setNewDay: React.Dispatch<React.SetStateAction<boolean>>;
+  setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDay: TTaskDay | null;
+  setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
   currentWeek: TTaskDay[];
+  initDay: () => boolean;
+  taskActive: boolean;
 };
 
-export const Dashboard = ({ setNewDay, currentWeek }: DashboardProps) => {
-  const [recentWeek, setRecentWeek] = useState<TDay[]>([]);
-  const [selected, setSelected] = useState<TTaskDay>({
-    id: "",
-    user: null,
-    date: undefined,
-    timeline: null,
-    tasks: [],
-  });
-
+export const Dashboard = ({
+  selectedDay,
+  setSelectedDay,
+  setTaskActive,
+  currentWeek,
+  initDay,
+  taskActive,
+}: DashboardProps) => {
   const carouselSpring = useSpring({
     from: { transform: "translateX(100%)" },
-    to: { transform: selected.date ? "translateX(0%)" : "translateX(100%)" },
+    to: {
+      transform:
+        selectedDay && !taskActive ? "translateX(0%)" : "translateX(100%)",
+    },
     config: config.stiff,
     reset: true,
   });
 
-  const handleSelected = (day: TDay) => {
-    if (selected?.id == day!.id) {
-      setSelected({
-        day: undefined,
-        id: "",
-      });
-    } else {
-      setSelected(day);
+  const handleSelected = (day: TTaskDay) => {
+    if (day.initialized) {
+      setTaskActive(true);
+      setSelectedDay(day);
     }
+    setSelectedDay(day);
   };
-
-  useEffect(() => {
-    const week = getRecentCurrentWeek();
-    setRecentWeek(week);
-    console.log("Hello");
-    console.log(currentWeek);
-  }, []);
 
   return (
     <animated.div
@@ -76,10 +71,8 @@ export const Dashboard = ({ setNewDay, currentWeek }: DashboardProps) => {
           {currentWeek?.map((i) => (
             <Day
               key={i.id}
-              id={i.id}
-              day={i.date}
-              tasks={i.tasks}
-              selected={selected}
+              day={i}
+              selected={selectedDay}
               handleSelected={handleSelected}
             />
           ))}
@@ -99,7 +92,11 @@ export const Dashboard = ({ setNewDay, currentWeek }: DashboardProps) => {
             borderTopRightRadius: "0.5rem",
           }}
         >
-          <Carousel day={selected} setNewDay={setNewDay} />
+          <Carousel
+            day={selectedDay}
+            setTaskActive={setTaskActive}
+            initDay={initDay}
+          />
         </div>
       </animated.div>
     </animated.div>
