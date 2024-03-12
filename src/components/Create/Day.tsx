@@ -5,6 +5,8 @@ import { useSpring, animated } from "@react-spring/web";
 import styled from "@emotion/styled";
 import { TTimeline } from "../../App";
 import { TTask, TTaskDay } from "../../Contexts/TasksContext";
+import { IoIosAdd } from "react-icons/io";
+import { MdSunny } from "react-icons/md";
 
 type TDayProps = {
   day: TTaskDay;
@@ -24,6 +26,8 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
     config: { duration: 100 },
   });
 
+  const today = new Date();
+
   const Dot = styled("div")`
     display: flex;
     width: 3px;
@@ -37,30 +41,35 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
   };
 
   return (
-    <>
-      <animated.div
-        className="day"
-        onClick={() => handleSelected(day)}
-        style={{ ...daySpring, opacity: day.initialized ? 1 : 0.5 }}
-      >
-        <div className="cross">+</div>
-        <p>{day.date?.getDate()}</p>
-        <p>
-          {day.date?.getDate()}th {"March"}, {"2024"}
-        </p>
-        <div
-          style={{
-            height: "100%",
-            display: "flex",
-            gap: ".5rem",
-            alignItems: "center",
-          }}
-        >
-          {day.tasks.map((i) => (
-            <TaskDot />
-          ))}
+    <animated.div
+      className="day"
+      onClick={() => handleSelected(day)}
+      style={{ ...daySpring }}
+    >
+      {!day.initialized && (
+        <div className="add-icon">
+          <IoIosAdd />
         </div>
-      </animated.div>
-    </>
+      )}
+      {today.getDate() == day.date?.getDate() && (
+        <div className="sun-icon">
+          <MdSunny />
+        </div>
+      )}
+      <p>{DayMap[day.date?.getDay()!]}</p>
+      <p>
+        {day.date?.getDate()}th {"March"}, {"2024"}
+      </p>
+      <div
+        style={{
+          height: "1rem",
+          display: "flex",
+          gap: ".5rem",
+          alignItems: "center",
+        }}
+      >
+        {day.tasks.length > 0 && day.tasks.map((i) => <TaskDot />)}
+      </div>
+    </animated.div>
   );
 };

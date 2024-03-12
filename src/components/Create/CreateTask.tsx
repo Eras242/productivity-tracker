@@ -7,6 +7,8 @@ import { TTaskDay } from "../../Contexts/TasksContext";
 import { TTask } from "../../Contexts/TasksContext";
 import { v4 } from "uuid";
 import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
+import { IoIosArrowBack } from "react-icons/io";
+import { TipTap } from "../../Tiptap";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -127,16 +129,26 @@ TaskCreationProps) => {
       className="task-creation"
       style={{ ...creationSpring, transform: "transformY(-50%)" }}
     >
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+          marginBottom: "2rem",
+        }}
+      >
         <button className="btn-icon" onClick={handleBack}>
-          back
+          <IoIosArrowBack />
         </button>
-        <h2 className="date-box">
+        <h3 className="date-box">
           {DayMap[selectedDay!.date?.getDay()!]} {selectedDay!.date?.getDate()!}{" "}
           {MonthMap[selectedDay!.date?.getMonth()!]}
-        </h2>
+        </h3>
       </div>
-      <h1>Add Todo</h1>
+      <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
+        <button>Simple</button>
+        <button>Editor</button>
+      </div>
       <form action="">
         <div className="title-time">
           <input
@@ -149,10 +161,14 @@ TaskCreationProps) => {
           <input name="time" type="time" onChange={onChangeTime} />
         </div>
         <button onClick={submitTask}>Add Todo</button>
+        <div style={{ width: "100%" }}></div>
         <animated.div style={fade} className="invalid-form">
           <p>{valid["message"]}</p>
         </animated.div>
       </form>
+      <div style={{ overflow: "scroll" }}>
+        <TipTap />
+      </div>
     </animated.div>
   );
 };

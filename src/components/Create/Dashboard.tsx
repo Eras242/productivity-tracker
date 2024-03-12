@@ -66,10 +66,14 @@ export const Dashboard = ({
             </div>
           </div>
         </div>
-
-        <div className="time-tag dash-header">
-          {" "}
-          <p>This Week | March 2024</p>
+        <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+          <div className="time-tag dash-header">
+            <p>This Week | March 2024</p>
+            <button className="calendar-btn">btn </button>
+          </div>
+          <div className="time-tag dash-header">
+            <p>13 Tasks</p>
+          </div>
         </div>
         <div className="weekday">
           {currentWeek?.map((i) => (
@@ -96,11 +100,13 @@ export const Dashboard = ({
             borderTopRightRadius: "0.5rem",
           }}
         >
-          <Carousel
-            day={selectedDay}
-            setTaskActive={setTaskActive}
-            initDay={initDay}
-          />
+          {selectedDay && (
+            <Carousel
+              day={selectedDay}
+              setTaskActive={setTaskActive}
+              initDay={initDay}
+            />
+          )}
         </div>
       </animated.div>
     </animated.div>

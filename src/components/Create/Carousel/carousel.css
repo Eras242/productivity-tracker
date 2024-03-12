@@ -5,6 +5,7 @@
 }
 
 .time-preview {
+  text-transform: uppercase;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

@@ -13,6 +13,9 @@
 }
 
 .headings-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-left: 1rem;
   width: 50%;
 }
@@ -24,27 +27,68 @@
 
 .weekday {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .day {
+  width: 148px;
+  height: 100px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-sizing: border-box;
   padding: 1rem;
+  box-sizing: border-box;
   border-radius: 3px;
-  width: 148px;
   background-color: rgba(50, 50, 50, 0.1);
   border: 1px solid rgba(50, 50, 50, 0);
   transition: 300ms;
+  position: relative;
+}
+
+.add-icon {
+  position: absolute;
+  font-size: 18px;
+  right: 0%;
+  bottom: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.sun-icon {
+  position: absolute;
+  font-size: 12px;
+  right: 0%;
+  top: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.today-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 8px;
+  letter-spacing: 0.125rem;
+  border: 1px solid white;
+  padding: 3px 6px;
 }
 
 .day:hover {
   background-color: rgba(50, 50, 50, 0.25);
   border: 1px solid rgba(50, 50, 50, 1);
+  opacity: 1;
 }
 
 .user-img {
@@ -55,8 +99,11 @@
 }
 
 .time-tag.dash-header {
-  width: 200px;
+  display: flex;
+  flex-direction: row;
   font-weight: bold;
+  align-items: center;
+  justify-content: center;
 }
 
 .dashboard-panel-main {
@@ -77,22 +124,23 @@
   background-color: rgba(25, 25, 25, 1);
 }
 
-.cross {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 20px;
-  height: 20px;
-  left: 100%;
-}
-
 .date-box {
   display: flex;
   box-sizing: border-box;
-  padding: .5rem 2rem;
+  padding: 0.5rem 2rem;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(50, 50, 50, 0.5);
   border-radius: 5px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.calender-btn {
+  height: 100%;
 }

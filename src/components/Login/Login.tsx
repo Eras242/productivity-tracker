@@ -1,6 +1,9 @@
 import React from "react";
 import { useSpring, animated } from "@react-spring/web";
 import "./login.css";
+import { FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 type LoginProps = {
   loggedIn: boolean;
@@ -53,9 +56,15 @@ export const Login = ({
             </div>
             <div className="login-line"></div>
             <div className="login-buttons">
-              <button>G</button>
-              <button>G</button>
-              <button>G</button>
+              <button className=".btn-icon">
+                <FaGoogle />
+              </button>
+              <button className=".btn-icon">
+                <FaGithub />
+              </button>
+              <button className=".btn-icon">
+                <FaXTwitter />
+              </button>
               <button>Sign in as Guest</button>
             </div>
           </form>
