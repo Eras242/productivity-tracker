@@ -8,11 +8,13 @@ import { timeConverter } from "../../Utilities/TimeConverter";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { TTaskDay } from "../../Contexts/TasksContext";
+import { useCurrentEditor } from "@tiptap/react";
 
 type DisplayProps = {
   selectedDay: TTaskDay | null;
   setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
   timelineInfo: TTimeline;
+  editorContent: string;
 };
 
 type Tfilter = {
@@ -25,6 +27,7 @@ export const Display = ({
   selectedDay,
   setSelectedDay,
   timelineInfo,
+  editorContent,
 }: DisplayProps) => {
   const [filter, setFilter] = useState<Tfilter>({
     all: true,
@@ -43,7 +46,7 @@ export const Display = ({
         setDisplayTasks(selectedDay.tasks.filter((t) => t.completed == true));
       }
     }
-  }, [filter, displayTasks]);
+  }, [filter, displayTasks, editorContent]);
 
   function handleFilter(e: React.ChangeEvent<HTMLInputElement>) {
     // Set all to false first
@@ -110,8 +113,24 @@ export const Display = ({
     setSelectedDay((prev) => ({ ...prev!, tasks: [] }));
   };
 
+  const ContentPreview = () => {
+    return (
+      <div
+        style={{
+          // position: "absolute",
+          width: "500px",
+          height: "500px",
+          backgroundColor: "green",
+        }}
+      >
+        {editorContent}
+      </div>
+    );
+  };
+
   return (
     <div className="container display-todos">
+      {/* <ContentPreview /> */}
       <div className="display-header">
         <div className="display-titles">
           <p>My Todo List</p>
@@ -163,6 +182,7 @@ export const Display = ({
             );
           })}
       </div>
+      <div></div>
       <div className="complete-list">
         <button onClick={handleMarkAllComplete}>Mark All Complete</button>
         <button onClick={handleClearComplete}>Clear Complete</button>

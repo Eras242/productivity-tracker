@@ -28,6 +28,8 @@ interface ITasksContext {
   taskActive: boolean;
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
   initDay: () => boolean;
+  editorContent: string;
+  setEditorContent: React.Dispatch<React.SetStateAction<string>>;
   // tasks: TTask[];
   // setTasks: React.Dispatch<React.SetStateAction<TTask[]>>;
 }
@@ -40,6 +42,8 @@ const TasksContext = createContext<ITasksContext>({
   taskActive: false,
   setTaskActive: () => {},
   initDay: () => false,
+  editorContent: "",
+  setEditorContent: () => {},
   // tasks: [],
   // setTasks: () => {},
 });
@@ -115,6 +119,23 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   //   }
   // };
 
+  const [editorContent, setEditorContent] = useState<string>(`
+  <h2>
+    Hi there,
+  </h2>
+  <p>
+    this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+  </p>
+  <ul>
+    <li>
+      That’s a bullet list with one …
+    </li>
+    <li>
+      … or two list items.
+    </li>
+  </ul>
+  `);
+
   return (
     <TasksContext.Provider
       value={{
@@ -125,6 +146,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
         taskActive,
         setTaskActive,
         initDay,
+        editorContent,
+        setEditorContent,
       }}
     >
       {children}

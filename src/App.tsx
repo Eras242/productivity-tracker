@@ -12,7 +12,8 @@ import { Dashboard } from "./components/Create/Dashboard";
 import { useUserContext } from "./Contexts/UserContext";
 import { CreateTask } from "./components/Create/CreateTask";
 import { useTasksContext } from "./Contexts/TasksContext";
-
+import { useCurrentEditor } from "@tiptap/react";
+import { EditorContent } from "@tiptap/react";
 const { v4 } = require("uuid");
 
 export type TodoStateProps = {
@@ -95,8 +96,8 @@ function App() {
     taskActive,
     setTaskActive,
     initDay,
-    // tasks,
-    // setTasks,
+    editorContent,
+    setEditorContent,
   } = useTasksContext();
 
   const divSpring = useSpring({
@@ -122,6 +123,20 @@ function App() {
     },
     delay: taskActive ? 300 : 0,
   });
+
+  // const ContentPreview = () => {
+
+  //   const { editor } = useCurrentEditor();
+
+  //   useEffect(() => {
+  //     if (!editor) {
+  //       return undefined
+  //     }
+  //   }, [editor])
+
+  //   return(<pre>{JSON.stringify(editor.getJSON(), null, 2)}</pre>)
+
+  // };
 
   return (
     <div className="App">
@@ -150,13 +165,15 @@ function App() {
               taskActive={taskActive}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
-              // setTasks={setTasks}
+              editorContent={editorContent}
+              setEditorContent={setEditorContent}
             />
           )}
         </ManagerPanel>
         <animated.div style={{ ...displaySpring }}>
           {taskActive && (
             <Display
+              editorContent={editorContent}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
               // setTasks={setTasks}

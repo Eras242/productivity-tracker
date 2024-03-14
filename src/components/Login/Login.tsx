@@ -54,7 +54,7 @@ export const Login = ({
               </button>
               <button className="btn-login">Sign Up</button>
             </div>
-            <div className="login-line"></div>
+            <div className="line"></div>
             <div className="login-buttons">
               <button className=".btn-icon">
                 <FaGoogle />

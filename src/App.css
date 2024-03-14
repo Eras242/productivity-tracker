@@ -18,11 +18,19 @@
 .task-creation {
   box-sizing: border-box;
   opacity: 50%;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
   background-color: rgb(20, 20, 20);
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.task-creation-header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  padding: 2rem 0rem 0rem 2rem;
 }
 
 .container {
@@ -195,4 +203,81 @@ label:hover {
   flex-direction: row;
   gap: 0.5rem;
   width: 100%;
+}
+
+.tiptap-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: relative;
+  height: 240px;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+.tiptap-menu-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  /* background-color: green; */
+  z-index: 2;
+}
+
+.tiptap-menu-container button {
+  border: none;
+  font-size: 12px;
+}
+
+.tiptap.ProseMirror {
+  width: 100%;
+  height: 100%;
+}
+
+.tiptap.ProseMirror input:focus {
+  outline: none;
+}
+
+.tiptap-container::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+  margin: 2rem;
+}
+
+.tiptap-container::-webkit-scrollbar-track {
+}
+
+.tiptap-container::-webkit-scrollbar-thumb {
+  background: #3f3f3f; /* Thumb color */
+  border-radius: 2px; /* Rounded corners */
+}
+
+.tiptap-container::-webkit-scrollbar-thumb:hover {
+  /* Thumb color on hover */
+}
+
+.simple-editor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 0rem;
+}
+
+.tiptap-panel-container {
+  background-color: rgba(66, 66, 66, 0.1);
+
+  padding: 1rem;
+  /* background-color: blue; */
+  height: 75%;
+}
+
+.simple-panel-container {
+  height: 25%;
+  padding: 2rem;
 }

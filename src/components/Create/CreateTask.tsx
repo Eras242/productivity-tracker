@@ -1,14 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
-import { TodoStateProps } from "../../App";
-import { CreateProps } from "./ManagerPanel";
 import { TTaskDay } from "../../Contexts/TasksContext";
 import { TTask } from "../../Contexts/TasksContext";
 import { v4 } from "uuid";
 import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
 import { IoIosArrowBack } from "react-icons/io";
 import { TipTap } from "../../Tiptap";
+import { useEditor } from "@tiptap/react";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -20,7 +19,8 @@ type TaskCreationProps = {
   selectedDay: TTaskDay | null;
   setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
-  // setTasks: React.Dispatch<React.SetStateAction<TTask[]>>;
+  editorContent: string;
+  setEditorContent: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const CreateTask = ({
@@ -28,8 +28,9 @@ export const CreateTask = ({
   setSelectedDay,
   taskActive,
   setTaskActive,
-}: // setTasks,
-TaskCreationProps) => {
+  editorContent,
+  setEditorContent,
+}: TaskCreationProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const [formDetails, setFormDetails] = useState<TTask>({
@@ -43,6 +44,8 @@ TaskCreationProps) => {
     valid: true,
     message: "",
   });
+
+  const [simple, setSimple] = useState<boolean>(true);
 
   function onChangeTime(e: React.ChangeEvent<HTMLInputElement>) {
     setFormDetails((prev) =>
@@ -107,6 +110,11 @@ TaskCreationProps) => {
     delay: 100,
   });
 
+  // const runTest = () => {
+  //   const { editor } = useEditor();
+
+  // };
+
   useEffect(() => {
     if (valid["valid"] == false) {
       setIsVisible(true);
@@ -129,14 +137,7 @@ TaskCreationProps) => {
       className="task-creation"
       style={{ ...creationSpring, transform: "transformY(-50%)" }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "1rem",
-          marginBottom: "2rem",
-        }}
-      >
+      <div className="task-creation-header">
         <button className="btn-icon" onClick={handleBack}>
           <IoIosArrowBack />
         </button>
@@ -145,30 +146,37 @@ TaskCreationProps) => {
           {MonthMap[selectedDay!.date?.getMonth()!]}
         </h3>
       </div>
-      <div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-        <button>Simple</button>
-        <button>Editor</button>
+        <div className="line"></div>
+      <div className="simple-editor">
+        <button onClick={() => setSimple(true)}>Simple</button>
+        <button onClick={() => setSimple(false)}>Editor</button>
       </div>
-      <form action="">
-        <div className="title-time">
-          <input
-            name="title"
-            type="text"
-            value={formDetails.title}
-            onChange={onChangeTime}
-            placeholder="Title"
-          />
-          <input name="time" type="time" onChange={onChangeTime} />
+      {simple && (
+        <div className="simple-panel-container" style={{ padding: "2rem" }}>
+          <form action="">
+            <div className="title-time">
+              <input
+                name="title"
+                type="text"
+                value={formDetails.title}
+                onChange={onChangeTime}
+                placeholder="Task"
+              />
+              <input name="time" type="time" onChange={onChangeTime} />
+            </div>
+            <button onClick={submitTask}>Add Task</button>
+            <div style={{ width: "100%" }}></div>
+            <animated.div style={fade} className="invalid-form">
+              <p>{valid["message"]}</p>
+            </animated.div>
+          </form>
         </div>
-        <button onClick={submitTask}>Add Todo</button>
-        <div style={{ width: "100%" }}></div>
-        <animated.div style={fade} className="invalid-form">
-          <p>{valid["message"]}</p>
-        </animated.div>
-      </form>
-      <div style={{ overflow: "scroll" }}>
-        <TipTap />
-      </div>
+      )}
+      {!simple && (
+        <div className="tiptap-panel-container">
+          <TipTap setEditorContent={setEditorContent} />
+        </div>
+      )}
     </animated.div>
   );
 };
