@@ -123,7 +123,7 @@ export const Display = ({
           backgroundColor: "green",
         }}
       >
-        {editorContent}
+        {JSON.stringify(selectedDay?.tasks[0].task.taskItem.body)}
       </div>
     );
   };
@@ -170,23 +170,20 @@ export const Display = ({
         {" "}
         {selectedDay &&
           selectedDay.tasks.map((t) => {
-            return (
-              <Task
-                key={t.id}
-                id={t.id}
-                title={t.title}
-                time={t.time}
-                completed={t.completed}
-                handleCheck={handleCheck}
-              />
-            );
+            return <Task key={t.id} task={t} handleCheck={handleCheck} />;
           })}
       </div>
       <div></div>
       <div className="complete-list">
-        <button onClick={handleMarkAllComplete}>Mark All Complete</button>
-        <button onClick={handleClearComplete}>Clear Complete</button>
-        <button onClick={handleClearAll}>Clear All</button>
+        <button className="btn" onClick={handleMarkAllComplete}>
+          Mark All Complete
+        </button>
+        <button className="btn" onClick={handleClearComplete}>
+          Clear Complete
+        </button>
+        <button className="btn" onClick={handleClearAll}>
+          Clear All
+        </button>
       </div>
     </div>
   );

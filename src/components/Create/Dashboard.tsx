@@ -61,8 +61,8 @@ export const Dashboard = ({
             <h1 className="user-welcome">Hello, Sol</h1>
             <p>426 Tasks completed</p>
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <button>Settings</button>
-              <button>Sign Out</button>
+              <button className="btn">Settings</button>
+              <button className="btn">Sign Out</button>
             </div>
           </div>
         </div>

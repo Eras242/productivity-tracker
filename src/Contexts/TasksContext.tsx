@@ -4,11 +4,16 @@ import { User, useUserContext } from "./UserContext";
 import { getRecentCurrentWeek } from "../Utilities/getWeekObject";
 import { v4 } from "uuid";
 
+type TTaskItem = {
+  simple: boolean;
+  taskItem: { title: string; body: null | string };
+};
+
 export type TTask = {
-  title: string;
+  id: string;
+  task: TTaskItem;
   time: string | number;
   completed: boolean;
-  id: string;
 };
 
 export type TTaskDay = {
@@ -81,11 +86,6 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // const addTask = (selectedDay: TTaskDay, task: TTask) => {
-  //   selectedDay &&
-  //     setSelectedDay((prev) => ({ ...prev!, tasks: [...prev, task] }));
-  // };
-
   const updateWeek = (selectedDay: TTaskDay) => {
     if (selectedDay)
       setCurrentWeek((prev) =>
@@ -98,10 +98,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       createWeek();
     }
     if (selectedDay) {
-      console.log("Fired");
       updateWeek(selectedDay);
-      console.log(selectedDay);
-      console.log(currentWeek);
+
     }
   }, [user, selectedDay]);
 
@@ -120,9 +118,6 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   // };
 
   const [editorContent, setEditorContent] = useState<string>(`
-  <h2>
-    Hi there,
-  </h2>
   <p>
     this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
   </p>

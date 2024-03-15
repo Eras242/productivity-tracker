@@ -5,9 +5,10 @@ import { timeConverter } from "../../../Utilities/TimeConverter";
 import { TTimeline } from "../../../App";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
+import { TTask } from "../../../Contexts/TasksContext";
 
 interface TaskDotInterface {
-  task: TodoStateProps;
+  task: TTask;
   info: TTimeline;
 }
 
@@ -45,7 +46,7 @@ export const TaskDot = ({ task, info }: TaskDotInterface) => {
         }}
       >
         <div className="time-tag day">{task.time}</div>
-        <p className="tm-title">{task.title}</p>
+        <p className="tm-title">{task.task.taskItem.title}</p>
         <p>Completed: {task.completed ? "True" : "False"}</p>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
 import { IoIosArrowBack } from "react-icons/io";
 import { TipTap } from "../../Tiptap";
-import { useEditor } from "@tiptap/react";
+import { Editor, useEditor } from "@tiptap/react";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -32,10 +32,11 @@ export const CreateTask = ({
   setEditorContent,
 }: TaskCreationProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [simple, setSimple] = useState<boolean>(true);
 
   const [formDetails, setFormDetails] = useState<TTask>({
     id: "",
-    title: "",
+    task: { simple: true, taskItem: { title: "", body: null } },
     time: "",
     completed: false,
   });
@@ -45,58 +46,91 @@ export const CreateTask = ({
     message: "",
   });
 
-  const [simple, setSimple] = useState<boolean>(true);
-
-  function onChangeTime(e: React.ChangeEvent<HTMLInputElement>) {
-    setFormDetails((prev) =>
-      e.target.name === "title"
-        ? {
-            ...prev,
-            [e.target.name]: e.target.value,
-            completed: false,
-            id: v4(),
-          }
-        : {
-            ...prev,
-            [e.target.name]: e.target.value,
-
-            completed: false,
-            id: v4(),
-          }
-    );
+  function onChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
+    {
+      setFormDetails((prev) =>
+        e.target.name === "title"
+          ? {
+              ...prev,
+              task: {
+                simple: simple,
+                taskItem: { title: e.target.value, body: null },
+              },
+              completed: false,
+              id: v4(),
+            }
+          : {
+              ...prev,
+              [e.target.name]: e.target.value,
+              completed: false,
+              id: v4(),
+            }
+      );
+    }
   }
 
-  function submitTask(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function submitTask(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    html?: string
+  ) {
     e.preventDefault();
+    console.log(simple);
 
     //error handle
-    if (formDetails["title"] == "") {
-      setValid({ valid: false, message: "- Please enter a valid title -" });
-      return;
-    } else if (formDetails["time"] == "") {
-      setValid({ valid: false, message: "- Please enter a valid time -" });
-      return;
+    if (simple) {
+      if (formDetails.task.taskItem["title"] == "") {
+        setValid({ valid: false, message: "- Please enter a valid title -" });
+        return;
+      } else if (formDetails["time"] == "") {
+        setValid({ valid: false, message: "- Please enter a valid time -" });
+        return;
+      }
+    } else {
+      const editorInvalidBody = ["", null, "<p></p>"];
+
+      if (!html) {
+        console.log("No Editor");
+        return;
+      }
+
+      setFormDetails((prev) => ({
+        ...prev,
+        task: {
+          simple: simple,
+          taskItem: { title: "Test", body: html },
+        },
+      }));
+      console.log(formDetails);
+      console.log(html);
+
+      if (formDetails.task.taskItem["title"] == "") {
+        setValid({ valid: false, message: "- Please enter a valid title -" });
+        return;
+      } else if (formDetails["time"] == "") {
+        setValid({ valid: false, message: "- Please enter a valid time -" });
+        return;
+      } else if (formDetails.task.taskItem.body! in editorInvalidBody) {
+        setValid({ valid: false, message: "- Empty body -" });
+        return;
+      }
     }
 
     setValid({ valid: true, message: "" });
 
-    if (selectedDay) {
-      setSelectedDay((prev) => ({
-        ...prev!,
-        tasks: [...prev!?.tasks, formDetails],
-      }));
-    }
-
-    // setTasks((prev) => [...prev, formDetails]);
+    setSelectedDay((prev) => ({
+      ...prev!,
+      tasks: [...prev!?.tasks, formDetails],
+    }));
 
     setFormDetails({
       id: "",
-      title: "",
+      task: { simple: simple, taskItem: { title: "", body: null } },
       time: "",
       completed: false,
     });
   }
 
+  // Springs
   const fade = useSpring({
     opacity: isVisible ? 1 : 0,
   });
@@ -110,11 +144,7 @@ export const CreateTask = ({
     delay: 100,
   });
 
-  // const runTest = () => {
-  //   const { editor } = useEditor();
-
-  // };
-
+  // Error effect
   useEffect(() => {
     if (valid["valid"] == false) {
       setIsVisible(true);
@@ -127,6 +157,7 @@ export const CreateTask = ({
     }
   }, [valid]);
 
+  // Return to dashboard
   const handleBack = () => {
     setSelectedDay(null);
     setTaskActive(false);
@@ -137,8 +168,12 @@ export const CreateTask = ({
       className="task-creation"
       style={{ ...creationSpring, transform: "transformY(-50%)" }}
     >
+      <animated.div style={fade} className="invalid-form">
+        <p>{valid["message"]}</p>
+        <p>{JSON.stringify(simple)}</p>
+      </animated.div>
       <div className="task-creation-header">
-        <button className="btn-icon" onClick={handleBack}>
+        <button className="btn icon" onClick={handleBack}>
           <IoIosArrowBack />
         </button>
         <h3 className="date-box">
@@ -146,10 +181,14 @@ export const CreateTask = ({
           {MonthMap[selectedDay!.date?.getMonth()!]}
         </h3>
       </div>
-        <div className="line"></div>
+      <div className="line"></div>
       <div className="simple-editor">
-        <button onClick={() => setSimple(true)}>Simple</button>
-        <button onClick={() => setSimple(false)}>Editor</button>
+        <button className="btn" onClick={() => setSimple(true)}>
+          Simple
+        </button>
+        <button className="btn" onClick={() => setSimple(false)}>
+          Editor
+        </button>
       </div>
       {simple && (
         <div className="simple-panel-container" style={{ padding: "2rem" }}>
@@ -158,23 +197,26 @@ export const CreateTask = ({
               <input
                 name="title"
                 type="text"
-                value={formDetails.title}
-                onChange={onChangeTime}
+                value={formDetails.task.taskItem.title}
+                onChange={onChangeForm}
                 placeholder="Task"
               />
-              <input name="time" type="time" onChange={onChangeTime} />
+              <input name="time" type="time" onChange={onChangeForm} />
             </div>
-            <button onClick={submitTask}>Add Task</button>
+            <button className="btn" onClick={submitTask}>
+              Add Task
+            </button>
             <div style={{ width: "100%" }}></div>
-            <animated.div style={fade} className="invalid-form">
-              <p>{valid["message"]}</p>
-            </animated.div>
           </form>
         </div>
       )}
       {!simple && (
         <div className="tiptap-panel-container">
-          <TipTap setEditorContent={setEditorContent} />
+          <TipTap
+            editorContent={editorContent}
+            onChangeForm={onChangeForm}
+            submitTask={submitTask}
+          />
         </div>
       )}
     </animated.div>

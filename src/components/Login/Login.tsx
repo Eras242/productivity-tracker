@@ -49,23 +49,23 @@ export const Login = ({
             <input type="password" placeholder="Password" />
             <div className="login-sign-up-buttons">
               {" "}
-              <button className="btn-login" onClick={handleLogin}>
+              <button className="btn login" onClick={handleLogin}>
                 Login
               </button>
-              <button className="btn-login">Sign Up</button>
+              <button className="btn login">Sign Up</button>
             </div>
             <div className="line"></div>
             <div className="login-buttons">
-              <button className=".btn-icon">
+              <button className="btn icon">
                 <FaGoogle />
               </button>
-              <button className=".btn-icon">
+              <button className="btn icon">
                 <FaGithub />
               </button>
-              <button className=".btn-icon">
+              <button className="btn icon">
                 <FaXTwitter />
               </button>
-              <button>Sign in as Guest</button>
+              <button className="btn">Sign in as Guest</button>
             </div>
           </form>
         </animated.div>

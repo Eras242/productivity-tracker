@@ -134,11 +134,11 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
       <Screen bgColor="#191919">
         <p>What time would you like to wake up?</p>
         <div>
-          <button>Start from New</button>
-          <button>Start from template</button>
+          <button className="btn">Start from New</button>
+          <button className="btn">Start from template</button>
         </div>
         <input type="time" name="wakeUp" ref={inputRef} />
-        <button onClick={handleNext} name="wakeUp">
+        <button className="btn" onClick={handleNext} name="wakeUp">
           Next
         </button>
         {/* <p>ERROR: {error.error ? "True" : "False"}</p> */}
@@ -151,7 +151,7 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
       <Screen bgColor="#191919">
         When would you like to start working?
         <input type="time" name="start" ref={inputRef} />
-        <button onClick={handleNext} name="start">
+        <button className="btn" onClick={handleNext} name="start">
           Next
         </button>
         <p>ERROR: {error.error ? "True" : "False"}</p>
@@ -164,7 +164,7 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
       <Screen bgColor="#191919">
         And what time would you like to finish working?
         <input type="time" name="end" ref={inputRef} />
-        <button onClick={handleNext} name="end">
+        <button className="btn" onClick={handleNext} name="end">
           Next
         </button>
         <p>ERROR: {error.error ? "True" : "False"}</p>
@@ -177,7 +177,7 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
       <Screen bgColor="#191919">
         And when would you like to go to bed?
         <input type="time" name="sleep" ref={inputRef} />
-        <button onClick={handleNext} name="sleep">
+        <button className="btn" onClick={handleNext} name="sleep">
           Next
         </button>
         <p>ERROR: {error.error ? "True" : "False"}</p>
@@ -196,7 +196,9 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
             </div>
           ))}
         </div>
-        <button onClick={handleComplete}>Add Tasks</button>
+        <button className="btn" onClick={handleComplete}>
+          Add Tasks
+        </button>
       </Screen>
     );
   }

@@ -57,7 +57,7 @@
   width: 100%;
 }
 
-.btn-login {
+.btn.login {
   font-weight: bold;
   display: flex;
   width: 100%;
