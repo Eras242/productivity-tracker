@@ -24,6 +24,7 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
       height: taskHover ? "500px" : "50px",
       // marginBottom: taskHover ? "2rem" : "0rem",
     },
+    config: { tension: 100, friction: 20 },
   });
 
   const taskItemSpring = useSpring({
@@ -37,17 +38,19 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
       className="container todo-item"
       onClick={() => handleCheck(task.id)}
     >
-      {task.time ? <div className="time-tag">{task.time}</div> : ""}
-      {task.task.taskItem.title}
+      <div className="task-editor-header">
+        {task.time ? <div className="time-tag">{task.time}</div> : ""}
+        {task.task.taskItem.title}
 
-      <input
-        className="complete-box"
-        type="checkbox"
-        name=""
-        id=""
-        checked={task.completed}
-        onChange={() => handleCheck(task.id)}
-      />
+        <input
+          className="complete-box"
+          type="checkbox"
+          name=""
+          id=""
+          checked={task.completed}
+          onChange={() => handleCheck(task.id)}
+        />
+      </div>
     </div>
   ) : (
     <animated.div

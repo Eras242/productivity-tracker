@@ -88,33 +88,35 @@ export const CreateTask = ({
     } else {
       const editorInvalidBody = ["", null, "<p></p>"];
 
-      if (!html) {
+      if (!editorContent) {
         console.log("No Editor");
         return;
       }
+      console.log(html);
 
       setFormDetails((prev) => ({
         ...prev,
         task: {
           simple: simple,
-          taskItem: { title: "Test", body: html },
+          taskItem: {
+            ...prev.task.taskItem,
+            body: html!,
+            randomThing: "hello",
+          },
         },
       }));
-      console.log(formDetails);
-      console.log(html);
 
       if (formDetails.task.taskItem["title"] == "") {
         setValid({ valid: false, message: "- Please enter a valid title -" });
         return;
+      } else if (formDetails.task.taskItem.body == null) {
+        setValid({ valid: false, message: "- Empty body -" });
+        return;
       } else if (formDetails["time"] == "") {
         setValid({ valid: false, message: "- Please enter a valid time -" });
         return;
-      } else if (formDetails.task.taskItem.body! in editorInvalidBody) {
-        setValid({ valid: false, message: "- Empty body -" });
-        return;
       }
     }
-
     setValid({ valid: true, message: "" });
 
     setSelectedDay((prev) => ({
@@ -213,6 +215,7 @@ export const CreateTask = ({
       {!simple && (
         <div className="tiptap-panel-container">
           <TipTap
+            setEditorContent={setEditorContent}
             editorContent={editorContent}
             onChangeForm={onChangeForm}
             submitTask={submitTask}

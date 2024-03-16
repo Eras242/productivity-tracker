@@ -319,3 +319,8 @@ input:focus {
   position: absolute;
   color: black;
 }
+
+.init-text {
+  position: absolute;
+  opacity: 0.1;
+}

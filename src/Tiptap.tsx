@@ -26,8 +26,9 @@ import { MdOutlineWrapText } from "react-icons/md";
 import { BiUndo } from "react-icons/bi";
 import { BiRedo } from "react-icons/bi";
 import { TTaskDay } from "./Contexts/TasksContext";
-
-import React, { useState } from "react";
+import { animated, useSpring } from "@react-spring/web";
+import React, { useEffect, useState } from "react";
+import parse from "html-react-parser";
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -204,6 +205,7 @@ const MenuBar = ({ editor }: { editor: Editor }) => {
 
 export const TipTap = ({
   editorContent,
+  setEditorContent,
   onChangeForm,
   submitTask,
 }: {
@@ -213,23 +215,24 @@ export const TipTap = ({
     html?: string
   ) => void;
   onChangeForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setEditorContent: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const extensions = [StarterKit];
+  const [init, setInit] = useState<boolean>(false);
 
-  const content = `
-  <p>
-    this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-  </p>
-  <ul>
-    <li>
-      That’s a bullet list with one …
-    </li>
-    <li>
-      … or two list items.
-    </li>
-  </ul>
+  const content = editorContent;
+  const initText = `<p>
+      this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
+    </p>
+    <ul>
+      <li>
+        That’s a bullet list with one …
+      </li>
+      <li>
+        … or two list items.
+      </li>
+    </ul>
   `;
-
   const editor = useEditor({
     extensions,
     content,
@@ -242,6 +245,7 @@ export const TipTap = ({
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const html = editor.getHTML();
+    console.log(html);
     submitTask(e, html);
   };
 
@@ -255,9 +259,14 @@ export const TipTap = ({
         placeholder="Title..."
         onChange={onChangeForm}
       />
-      <div className="tiptap-container">
-        <EditorContent editor={editor} />
-      </div>
+      <animated.div className="tiptap-container">
+        {init ? <EditorContent editor={editor} /> : ""}
+        {!init && (
+          <p className="init-text" onClick={() => setInit(true)}>
+            {parse(initText)}
+          </p>
+        )}
+      </animated.div>
       <div style={{ display: "flex", width: "100%", position: "absolute" }}>
         <input name="time" type="time" onChange={onChangeForm} />
         <button className="btn" onClick={handleSubmit}>
