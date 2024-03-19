@@ -124,20 +124,6 @@ function App() {
     delay: taskActive ? 300 : 0,
   });
 
-  // const ContentPreview = () => {
-
-  //   const { editor } = useCurrentEditor();
-
-  //   useEffect(() => {
-  //     if (!editor) {
-  //       return undefined
-  //     }
-  //   }, [editor])
-
-  //   return(<pre>{JSON.stringify(editor.getJSON(), null, 2)}</pre>)
-
-  // };
-
   return (
     <div className="App">
       <animated.div className="task-creation-display" style={{ ...divSpring }}>

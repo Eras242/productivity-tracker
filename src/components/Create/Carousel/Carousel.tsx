@@ -48,7 +48,6 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
   }, [day]);
 
   const handleComplete = () => {
-    console.log(tempTimeline);
     initDay();
     setTaskActive(true);
   };

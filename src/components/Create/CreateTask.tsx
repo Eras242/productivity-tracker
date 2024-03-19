@@ -33,10 +33,11 @@ export const CreateTask = ({
 }: TaskCreationProps) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [simple, setSimple] = useState<boolean>(true);
+  const [panelVisible, setPanelVisible] = useState<boolean>(true);
 
   const [formDetails, setFormDetails] = useState<TTask>({
     id: "",
-    task: { simple: true, taskItem: { title: "", body: null } },
+    task: { simple: true, taskItem: { title: "", body: "null" } },
     time: "",
     completed: false,
   });
@@ -54,7 +55,7 @@ export const CreateTask = ({
               ...prev,
               task: {
                 simple: simple,
-                taskItem: { title: e.target.value, body: null },
+                taskItem: { ...prev.task.taskItem, title: e.target.value },
               },
               completed: false,
               id: v4(),
@@ -69,54 +70,30 @@ export const CreateTask = ({
     }
   }
 
-  function submitTask(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    html?: string
-  ) {
+  function submitTask(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    console.log(simple);
-
     //error handle
     if (simple) {
       if (formDetails.task.taskItem["title"] == "") {
         setValid({ valid: false, message: "- Please enter a valid title -" });
-        return;
+        return false;
       } else if (formDetails["time"] == "") {
         setValid({ valid: false, message: "- Please enter a valid time -" });
-        return;
+        return false;
       }
     } else {
-      const editorInvalidBody = ["", null, "<p></p>"];
-
-      if (!editorContent) {
-        console.log("No Editor");
-        return;
-      }
-      console.log(html);
-
-      setFormDetails((prev) => ({
-        ...prev,
-        task: {
-          simple: simple,
-          taskItem: {
-            ...prev.task.taskItem,
-            body: html!,
-            randomThing: "hello",
-          },
-        },
-      }));
-
       if (formDetails.task.taskItem["title"] == "") {
         setValid({ valid: false, message: "- Please enter a valid title -" });
-        return;
+        return false;
       } else if (formDetails.task.taskItem.body == null) {
         setValid({ valid: false, message: "- Empty body -" });
-        return;
+        return false;
       } else if (formDetails["time"] == "") {
         setValid({ valid: false, message: "- Please enter a valid time -" });
-        return;
+        return false;
       }
     }
+
     setValid({ valid: true, message: "" });
 
     setSelectedDay((prev) => ({
@@ -130,12 +107,19 @@ export const CreateTask = ({
       time: "",
       completed: false,
     });
+    return true;
   }
+  // Return to dashboard
+  const handleBack = () => {
+    setSelectedDay(null);
+    setTaskActive(false);
+  };
 
   // Springs
   const fade = useSpring({
     opacity: isVisible ? 1 : 0,
   });
+
   const creationSpring = useSpring({
     from: {
       opacity: "0",
@@ -146,6 +130,27 @@ export const CreateTask = ({
     delay: 100,
   });
 
+  const simpleSpring = useSpring({
+    from: {
+      transform: "translateX(100%)",
+      opacity: "0",
+    },
+    to: {
+      transform: panelVisible ? "translateX(0%)" : "translateX(-100%)",
+      opacity: panelVisible ? "1" : "0",
+    },
+  });
+
+  const editorSpring = useSpring({
+    from: {
+      transform: "translateX(100%)",
+      opacity: "0",
+    },
+    to: {
+      transform: !panelVisible ? "translateX(0%)" : "translateX(100%)",
+      opacity: !panelVisible ? "1" : "0",
+    },
+  });
   // Error effect
   useEffect(() => {
     if (valid["valid"] == false) {
@@ -158,12 +163,6 @@ export const CreateTask = ({
       return () => clearTimeout(timeout);
     }
   }, [valid]);
-
-  // Return to dashboard
-  const handleBack = () => {
-    setSelectedDay(null);
-    setTaskActive(false);
-  };
 
   return (
     <animated.div
@@ -183,17 +182,24 @@ export const CreateTask = ({
           {MonthMap[selectedDay!.date?.getMonth()!]}
         </h3>
       </div>
-      <div className="line"></div>
-      <div className="simple-editor">
-        <button className="btn" onClick={() => setSimple(true)}>
-          Simple
-        </button>
-        <button className="btn" onClick={() => setSimple(false)}>
-          Editor
-        </button>
+      {/* <div className="line"></div> */}
+      <div style={{ width: "100%" }}>
+        <label className="switch">
+          <input
+            type="checkbox"
+            onClick={() => {
+              setPanelVisible(!panelVisible);
+              setTimeout(() => setSimple(!simple), 100);
+            }}
+          />
+          <span className="slider"></span>
+        </label>
       </div>
       {simple && (
-        <div className="simple-panel-container" style={{ padding: "2rem" }}>
+        <animated.div
+          className="simple-panel-container"
+          style={{ padding: "2rem", ...simpleSpring }}
+        >
           <form action="">
             <div className="title-time">
               <input
@@ -210,17 +216,25 @@ export const CreateTask = ({
             </button>
             <div style={{ width: "100%" }}></div>
           </form>
-        </div>
+          <div>
+            <h3>Suggested previous tasks:</h3>
+          </div>
+        </animated.div>
       )}
       {!simple && (
-        <div className="tiptap-panel-container">
+        <animated.div
+          className="tiptap-panel-container"
+          style={{ ...editorSpring }}
+        >
           <TipTap
             setEditorContent={setEditorContent}
             editorContent={editorContent}
             onChangeForm={onChangeForm}
+            formDetails={formDetails}
+            setFormDetails={setFormDetails}
             submitTask={submitTask}
           />
-        </div>
+        </animated.div>
       )}
     </animated.div>
   );

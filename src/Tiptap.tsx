@@ -29,6 +29,7 @@ import { TTaskDay } from "./Contexts/TasksContext";
 import { animated, useSpring } from "@react-spring/web";
 import React, { useEffect, useState } from "react";
 import parse from "html-react-parser";
+import { TTask } from "./Contexts/TasksContext";
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -207,20 +208,28 @@ export const TipTap = ({
   editorContent,
   setEditorContent,
   onChangeForm,
+  formDetails,
+  setFormDetails,
   submitTask,
 }: {
   editorContent: string;
   submitTask: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    html?: string
-  ) => void;
+  ) => boolean;
+  setFormDetails: React.Dispatch<React.SetStateAction<TTask>>;
   onChangeForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setEditorContent: React.Dispatch<React.SetStateAction<string>>;
+  formDetails: TTask;
 }) => {
   const extensions = [StarterKit];
   const [init, setInit] = useState<boolean>(false);
+  let content;
 
-  const content = editorContent;
+  useEffect(() => {
+    content = editorContent;
+    editor?.commands.focus();
+  }, [init]);
+
   const initText = `<p>
       this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
     </p>
@@ -236,6 +245,23 @@ export const TipTap = ({
   const editor = useEditor({
     extensions,
     content,
+    onUpdate: ({ editor }) => {
+      setFormDetails((prev) => ({
+        ...prev,
+        task: {
+          ...prev.task,
+          taskItem: {
+            ...prev.task.taskItem,
+            body: editor.getHTML(),
+          },
+        },
+      }));
+    },
+  });
+
+  const initTextSpring = useSpring({
+    from: { opacity: init ? "0" : "0.1" },
+    to: { opacity: init ? "0" : "0.1" },
   });
 
   if (!editor) {
@@ -244,9 +270,10 @@ export const TipTap = ({
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const html = editor.getHTML();
-    console.log(html);
-    submitTask(e, html);
+    const result = submitTask(e);
+    if (result) {
+      editor.commands.setContent(`<p><p/>`);
+    }
   };
 
   return (
@@ -258,13 +285,18 @@ export const TipTap = ({
         name="title"
         placeholder="Title..."
         onChange={onChangeForm}
+        value={formDetails.task.taskItem.title}
       />
       <animated.div className="tiptap-container">
         {init ? <EditorContent editor={editor} /> : ""}
         {!init && (
-          <p className="init-text" onClick={() => setInit(true)}>
+          <animated.p
+            className="init-text"
+            style={{ ...initTextSpring }}
+            onClick={() => setInit(true)}
+          >
             {parse(initText)}
-          </p>
+          </animated.p>
         )}
       </animated.div>
       <div style={{ display: "flex", width: "100%", position: "absolute" }}>

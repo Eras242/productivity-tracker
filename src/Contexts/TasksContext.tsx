@@ -35,8 +35,6 @@ interface ITasksContext {
   initDay: () => boolean;
   editorContent: string;
   setEditorContent: React.Dispatch<React.SetStateAction<string>>;
-  // tasks: TTask[];
-  // setTasks: React.Dispatch<React.SetStateAction<TTask[]>>;
 }
 
 const TasksContext = createContext<ITasksContext>({
@@ -49,8 +47,6 @@ const TasksContext = createContext<ITasksContext>({
   initDay: () => false,
   editorContent: "",
   setEditorContent: () => {},
-  // tasks: [],
-  // setTasks: () => {},
 });
 
 export const useTasksContext = () => useContext(TasksContext);
@@ -60,7 +56,6 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentWeek, setCurrentWeek] = useState<TTaskDay[]>([]);
   const [selectedDay, setSelectedDay] = useState<TTaskDay | null>(null);
   const [taskActive, setTaskActive] = useState<boolean>(false);
-  // const [tasks, setTasks] = useState<TTask[]>([]);
 
   const createWeek = () => {
     const week = getRecentCurrentWeek();
@@ -74,7 +69,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
         initialized: false,
       };
     });
-    setCurrentWeek(cw);
+    localStorage.setItem("currentWeekState", JSON.stringify(cw));
   };
 
   const initDay = () => {
@@ -86,21 +81,32 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const updateWeek = (selectedDay: TTaskDay) => {
-    if (selectedDay)
-      setCurrentWeek((prev) =>
-        prev.map((i) => (i.id == selectedDay.id ? selectedDay : i))
-      );
-  };
+  useEffect(() => {
+    const data = localStorage.getItem("currentWeekState");
+    let week: TTaskDay[];
+    week = JSON.parse(data!);
+    if (!data || week.length == 0) {
+      console.log("No week found in Local Storage, creating week...");
+      createWeek();
+      return;
+    }
+    setCurrentWeek(week.map((i) => ({ ...i, date: new Date(i.date!) })));
+  }, []);
 
   useEffect(() => {
-    if (currentWeek.length == 0) {
-      createWeek();
-    }
     if (selectedDay) {
-      updateWeek(selectedDay);
+      setCurrentWeek((prev) => {
+        const newState = prev.map((i) =>
+          i.id == selectedDay.id ? selectedDay : i
+        );
 
+        localStorage.setItem("currentWeekState", JSON.stringify(newState));
+        return newState;
+      });
+      console.log(currentWeek);
     }
+
+    console.log("Finished Update");
   }, [user, selectedDay]);
 
   // const handleTasks = (taskItem: TTask) => {
@@ -117,19 +123,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   //   }
   // };
 
-  const [editorContent, setEditorContent] = useState<string>(`
-  <p>
-    this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-  </p>
-  <ul>
-    <li>
-      That’s a bullet list with one …
-    </li>
-    <li>
-      … or two list items.
-    </li>
-  </ul>
-  `);
+  const [editorContent, setEditorContent] = useState<string>(`<p></p>`);
 
   return (
     <TasksContext.Provider

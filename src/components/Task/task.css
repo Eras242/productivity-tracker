@@ -3,13 +3,14 @@
   align-items: start;
   flex-direction: column;
   width: 100%;
-  height: 50px;
+  height: 59px;
   background-color: rgb(19, 19, 19);
   border: 1px solid rgba(63, 63, 63, 0.2);
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   box-sizing: border-box;
   padding: 1rem;
-  justify-content: space-between;
+  gap: 1rem;
+  /* overflow: hidden; */
 }
 
 .complete-box {
@@ -28,5 +29,12 @@
 .task-editor-content {
   align-self: flex-start;
   width: 100%;
+  height: 100%;
   height: auto;
+}
+
+.task-edit-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
 }

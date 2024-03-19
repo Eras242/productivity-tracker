@@ -6,6 +6,7 @@ import { css } from "@emotion/css";
 import { TTask } from "../../Contexts/TasksContext";
 import { animated, useSpring } from "@react-spring/web";
 import parse from "html-react-parser";
+import { RiEditBoxLine } from "react-icons/ri";
 
 type TaskProps = {
   task: TTask;
@@ -17,11 +18,11 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
 
   const taskSpring = useSpring({
     from: {
-      height: taskHover ? "50px" : "500px",
+      height: "50px",
       // marginBottom: taskHover ? "0rem" : "2rem",
     },
     to: {
-      height: taskHover ? "500px" : "50px",
+      height: taskHover ? "200px" : "50px",
       // marginBottom: taskHover ? "2rem" : "0rem",
     },
     config: { tension: 100, friction: 20 },
@@ -77,11 +78,13 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
         className="task-editor-content"
         style={{ ...taskItemSpring }}
       >
-        {parse(JSON.stringify(task.task.taskItem.body))}
-        <div>
-          <button className="btn">Complete</button>
-          <button className="btn">Edit</button>
-        </div>
+        {parse(task.task.taskItem.body!)}
+      </animated.div>
+      <animated.div className="task-edit-buttons" style={{ ...taskItemSpring }}>
+        <button className="btn">Complete</button>
+        <button className="btn">
+          Edit <RiEditBoxLine />
+        </button>
       </animated.div>
     </animated.div>
   );
