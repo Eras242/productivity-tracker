@@ -18,11 +18,11 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
 
   const taskSpring = useSpring({
     from: {
-      height: "50px",
+      height: "59px",
       // marginBottom: taskHover ? "0rem" : "2rem",
     },
     to: {
-      height: taskHover ? "200px" : "50px",
+      height: taskHover ? "200px" : "59px",
       // marginBottom: taskHover ? "2rem" : "0rem",
     },
     config: { tension: 100, friction: 20 },
@@ -61,6 +61,7 @@ export const Task = ({ task, handleCheck }: TaskProps) => {
       onMouseEnter={() => setTaskHover(true)}
       onMouseLeave={() => setTaskHover(false)}
     >
+      <div className="task-editor-bar"></div>
       <div className="task-editor-header">
         {task.time ? <div className="time-tag">{task.time}</div> : ""}
         {task.task.taskItem.title}

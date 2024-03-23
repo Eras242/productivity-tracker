@@ -34,7 +34,9 @@ export const Display = ({
     unfinished: false,
     complete: false,
   });
-  const [displayTasks, setDisplayTasks] = useState<TTask[]>([]);
+  const [displayTasks, setDisplayTasks] = useState<TTask[]>(
+    selectedDay!?.tasks
+  );
 
   useEffect(() => {
     if (selectedDay) {
@@ -46,12 +48,9 @@ export const Display = ({
         setDisplayTasks(selectedDay.tasks.filter((t) => t.completed == true));
       }
     }
-  }, [filter, displayTasks, editorContent]);
+  }, [filter, selectedDay]);
 
   function handleFilter(e: React.ChangeEvent<HTMLInputElement>) {
-    // Set all to false first
-
-    // Set all in filter to false except selceted
     const resetFilter: FilterInterface = {
       all: false,
       unfinished: false,
@@ -59,7 +58,6 @@ export const Display = ({
     };
 
     setFilter(resetFilter);
-
     setFilter((prev) => ({ ...prev, [e.target.name]: true }));
   }
 
@@ -163,13 +161,13 @@ export const Display = ({
             />
             <label htmlFor="complete">COMPLETE</label>
           </div>
-          <p>{selectedDay && selectedDay.tasks.length} Items</p>
+          <p>{selectedDay && selectedDay.tasks.length} Tasks</p>
         </div>
       </div>
       <div className="task-items-container">
         {" "}
         {selectedDay &&
-          selectedDay.tasks.map((t) => {
+          displayTasks.map((t) => {
             return <Task key={t.id} task={t} handleCheck={handleCheck} />;
           })}
       </div>

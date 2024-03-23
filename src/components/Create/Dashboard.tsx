@@ -6,6 +6,8 @@ import { getRecentCurrentWeek } from "../../Utilities/getWeekObject";
 import { TDay } from "../../Utilities/getWeekObject";
 import { animated, useSpring, config } from "@react-spring/web";
 import { TTaskDay } from "../../Contexts/TasksContext";
+import { IoIosArrowForward } from "react-icons/io";
+import { Calender } from "./CalenderModal/Calender";
 
 type DashboardProps = {
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,6 +35,8 @@ export const Dashboard = ({
     config: config.stiff,
     reset: true,
   });
+
+  const [calenderVisible, setCalenderVisible] = useState<boolean>(false);
 
   const handleSelected = (day: TTaskDay) => {
     if (day.initialized) {
@@ -67,9 +71,17 @@ export const Dashboard = ({
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+          <button
+            className="time-tag dash-header calender"
+            onClick={() => setCalenderVisible(!calenderVisible)}
+          >
+            <p>Calender</p>
+            <p>
+              <IoIosArrowForward />
+            </p>
+          </button>
           <div className="time-tag dash-header">
             <p>This Week | March 2024</p>
-            <button className="calendar-btn">btn </button>
           </div>
           <div className="time-tag dash-header">
             <p>13 Tasks</p>
@@ -109,6 +121,7 @@ export const Dashboard = ({
           )}
         </div>
       </animated.div>
+      <Calender visible={calenderVisible} />
     </animated.div>
   );
 };

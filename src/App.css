@@ -32,7 +32,7 @@
   flex-direction: row;
   gap: 0.25rem;
   width: 100%;
-  padding: 2rem 0rem 0rem 2rem;
+  padding: 2rem 2rem 0rem 2rem;
 }
 
 .container {
@@ -169,6 +169,10 @@ input:hover {
 }
 
 .time-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   padding: 0.25rem 1rem;
@@ -426,4 +430,26 @@ input:checked .switch::after {
 
 .btn.icon {
   width: 34px;
+}
+
+.btn.icon.trash {
+  margin-left: auto;
+  color: rgba(63, 63, 63, 1);
+}
+
+.time-tag.dash-header.calender {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  color: white;
+  transition: 0.3s;
+}
+
+.time-tag.dash-header.calender:hover {
+  gap: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
 }

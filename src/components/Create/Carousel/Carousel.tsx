@@ -132,14 +132,13 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
     return (
       <Screen bgColor="#191919">
         <p>What time would you like to wake up?</p>
-        <div>
-          <button className="btn">Start from New</button>
-          <button className="btn">Start from template</button>
+        <div style={{ display: "flex", gap: ".5rem" }}>
+          <input type="time" name="wakeUp" ref={inputRef} />
+          <button className="btn" onClick={handleNext} name="wakeUp">
+            Next
+          </button>
         </div>
-        <input type="time" name="wakeUp" ref={inputRef} />
-        <button className="btn" onClick={handleNext} name="wakeUp">
-          Next
-        </button>
+        <button className="btn">Start from template</button>
         {/* <p>ERROR: {error.error ? "True" : "False"}</p> */}
       </Screen>
     );

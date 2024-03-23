@@ -8,6 +8,7 @@ import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
 import { IoIosArrowBack } from "react-icons/io";
 import { TipTap } from "../../Tiptap";
 import { Editor, useEditor } from "@tiptap/react";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -181,6 +182,9 @@ export const CreateTask = ({
           {DayMap[selectedDay!.date?.getDay()!]} {selectedDay!.date?.getDate()!}{" "}
           {MonthMap[selectedDay!.date?.getMonth()!]}
         </h3>
+        <button className="btn icon trash">
+          <FaRegTrashAlt />
+        </button>
       </div>
       {/* <div className="line"></div> */}
       <div style={{ width: "100%" }}>
