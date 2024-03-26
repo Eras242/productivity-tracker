@@ -26,6 +26,8 @@ export const Dashboard = ({
   initDay,
   taskActive,
 }: DashboardProps) => {
+  const [calenderVisible, setCalenderVisible] = useState<boolean>(false);
+
   const carouselSpring = useSpring({
     from: { transform: "translateX(100%)" },
     to: {
@@ -36,13 +38,25 @@ export const Dashboard = ({
     reset: true,
   });
 
-  const [calenderVisible, setCalenderVisible] = useState<boolean>(false);
+  const calenderSpring = useSpring({
+    from: { transform: "translateX(100%)" },
+    to: {
+      transform:
+        calenderVisible && !taskActive && !selectedDay
+          ? "translateX(0%)"
+          : "translateX(100%)",
+    },
+    config: config.stiff,
+    reset: true,
+  });
 
   const handleSelected = (day: TTaskDay) => {
     if (day.initialized) {
       setTaskActive(true);
       setSelectedDay(day);
+      setCalenderVisible(false);
     }
+    setCalenderVisible(false);
     setSelectedDay(day);
   };
 
@@ -73,7 +87,10 @@ export const Dashboard = ({
         <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
           <button
             className="time-tag dash-header calender"
-            onClick={() => setCalenderVisible(!calenderVisible)}
+            onClick={() => {
+              setSelectedDay(null);
+              setCalenderVisible(!calenderVisible);
+            }}
           >
             <p>Calender</p>
             <p>
@@ -121,7 +138,23 @@ export const Dashboard = ({
           )}
         </div>
       </animated.div>
-      <Calender visible={calenderVisible} />
+      <animated.div
+        className="dashboard-panel-edit"
+        style={{ ...calenderSpring }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "relative",
+            backgroundColor: "#191919",
+            borderTopLeftRadius: "0.5rem",
+            borderTopRightRadius: "0.5rem",
+          }}
+        >
+          <Calender visible={calenderVisible} />
+        </div>
+      </animated.div>
     </animated.div>
   );
 };
