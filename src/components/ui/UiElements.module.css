@@ -1,0 +1,12 @@
+.textBox {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  justify-content: center;
+  border-radius: 3px;
+  border: 1px solid #313131;
+  background-color: rgb(16, 16, 16);
+  width: auto;
+  height: 1.5rem;
+  padding: 0.1rem 1rem;
+}

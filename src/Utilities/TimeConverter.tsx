@@ -3,7 +3,6 @@ import { stringify } from "querystring";
 export const timeConverter = (
   time: number | string,
   conversion?: string
-
   // mt = Minutes conversion to 24 hour time. e.g: number -> "12:53"
   // tm = 24 Hour time conversion to minutes. e.g: "12:53" -> number
 ): string | number => {

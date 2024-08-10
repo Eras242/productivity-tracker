@@ -6,6 +6,9 @@ import { TaskDot } from "./TaskDot";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { TTask } from "../../../Contexts/TasksContext";
+import { Scrubber } from "./Scrubber";
+
+import { TextBox } from "../../ui/TextBox";
 
 type TimelineProps = {
   tasks: TTask[] | null;
@@ -56,6 +59,31 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
     return () => clearInterval(timeInterval);
   }, [timelineInfo, currentTime, totalWorkDuration]);
 
+  const getMiddayAsPercentage = () => {
+    if (timelineInfo.end) {
+      const end = timelineInfo.end;
+      const midday = 720;
+      // console.log(end);
+      return String(Math.trunc((midday / end) * 100));
+    }
+  };
+
+  const getCurrentTimeAsPercentage = () => {
+    if (timelineInfo.end && timelineInfo.start) {
+      const start = timelineInfo.start; // 600
+      const end = timelineInfo.end; // 1080
+      const ct = timeConverter("10:00", "tm"); // 910
+      const dur = end - start;
+
+      const pos = Number(ct) - start;
+
+      // console.log(end);
+      return String(Math.trunc((pos / dur) * 100));
+    }
+  };
+  console.log(currentTime);
+  console.log(getCurrentTimeAsPercentage());
+
   return (
     <div className="container day-timeline">
       <div className=" day-line start-finish">
@@ -81,7 +109,16 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
             ? timeConverter(timelineInfo.end, "mt") + " AM"
             : "NaN"}
         </p>
-        {/* <div className="timeline day-scrubber"></div> */}
+        <div
+          className="timeline day-scrubber"
+          style={{ left: `${getCurrentTimeAsPercentage()}%` }}
+        ></div>
+        <div
+          className="timeline twelvePM"
+          style={{ left: `${getMiddayAsPercentage()}%` }}
+        >
+          12 PM
+        </div>
         <div className="timeline task-dot-container">
           {" "}
           {tasks!.map((t) => {
@@ -92,12 +129,13 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
       <div className="timeline stats">
         <div className="timeline headers">
           {" "}
-          <div className="time-tag day">February 22nd, 2024</div>
-          <div className="time-tag day">{currentTime} PM</div>
-          <div className="time-tag day">
+          <TextBox>February 22nd, 2024</TextBox>
+          <TextBox>{currentTime} PM</TextBox>
+          <TextBox>
+            {" "}
             {getDuration(timelineInfo.start!, timelineInfo.end!)?.hours}HR{" "}
             {getDuration(timelineInfo.start!, timelineInfo.end!)?.minutes}MIN
-          </div>
+          </TextBox>
         </div>
         {/* <div className="time-tag day">{totalWorkDuration}</div> */}
       </div>

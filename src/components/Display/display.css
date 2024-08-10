@@ -131,10 +131,17 @@
 
 .timeline.day-scrubber {
   position: absolute;
-  background-color: rgba(160, 160, 160, 1);
+  background-color: rgb(66, 66, 66);
   left: 21%;
   width: 1px;
   height: 1rem;
+}
+
+.timeline.twelvePM {
+  background-color: red;
+  position: absolute;
+  top: -2.5rem;
+  /* left: 0%; */
 }
 
 .timeline.headers {
