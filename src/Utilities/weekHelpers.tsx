@@ -65,6 +65,9 @@ export const generateWeek = (user: User) => {
   }));
 
   weeks.push({ id: v4(), days: week, startDate: weekDays[0].day });
+
+  // Function should return weeks not set local storage
+  // setting to local storage should happen independently
   localStorage.setItem("weeks", JSON.stringify(weeks));
 };
 

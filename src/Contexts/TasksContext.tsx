@@ -89,7 +89,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       // return;
     }
 
-    // JSON returns date as an ISO time string, need to map over each date of the returned week and convert the ISO -> date object
+    // JSON returns date as an ISO time string,
+    // Need to map over each date of the returned week(s) and convert the ISO timestring -> date object
     weeks = weeks.map((week) => ({
       ...week,
       startDate: new Date(week.startDate!),
@@ -97,55 +98,60 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     }));
 
     console.log(weeks);
-    // Check if current week is the actual current week by seeing if today exists in week, if yes, set currentWeek to current week, else generate new week and push this to allWeeks?
+    // Check if current week is the actual current week by seeing if today exists in week,
+    // if yes, setSelectedWeek(current week),
+    // else generate new week and push this to allWeeks?
+
+    let weeksConfigured = false;
 
     weeks.forEach((w) => {
       let todayDate = t.toISOString().slice(0, 10).toString();
       let index: number;
-
       let curr = w.days.map((d) => d.date?.toISOString().slice(0, 10));
-      console.log(curr);
-      console.log(todayDate);
 
       if (curr.includes(todayDate)) {
         index = weeks.indexOf(w);
         console.log(index);
         setSelectedWeek(weeks[index]);
-        // setAllWeeks((prev) => (...prev, weeks[index]));
-        // return;
       } else {
       }
     });
+    setAllWeeks(weeks);
   }, []);
 
-  // useEffect for everytime a selectedDay changes or user changes
+  // useEffect for every time a selectedDay changes or user changes
   // 1. setCurrentWeek to ...prev days with new updated day
   // 2. setAllWeeks to ...prev weeks with new updated week
-  // useEffect(() => {
-  //   if (selectedDay) {
-  //     setCurrentWeek((prev) => {
-  //       if (prev) {
-  //         const newState = {
-  //           ...prev,
-  //            prev.days.map((i) =>i.id == selectedDay.id ? selectedDay : i)
-  //         };
 
-  //         // localStorage.setItem("weeks", JSON.stringify(newState));
-  //         return newState;
-  //       }
-  //     });
-  //   }
+  useEffect(() => {
+    if (selectedDay) {
+      setSelectedWeek((prev) => {
+        if (prev) {
+          // Correctly update the days array within the currentWeek state
+          const updatedDays = prev.days.map((day: TTaskDay) =>
+            day.id === selectedDay.id ? selectedDay : day
+          );
+          const newState: TWeek = {
+            ...prev,
+            days: updatedDays,
+          };
 
-  //   //   setAllWeeks((prev) => {
-  //   //     const newState = prev?.map((i) =>
-  //   //       i.id == currentWeek?.id ? selectedDay : i
-  //   //     );
+          // localStorage.setItem("weeks", JSON.stringify(newState));
+          return newState;
+        }
+      });
+    }
 
-  //   //     localStorage.setItem("weeks", JSON.stringify(newState));
-  //   //     return newState;
-  //   //   });
-  //   // }
-  // }, [selectedDay]);
+    //   setAllWeeks((prev) => {
+    //     const newState = prev?.map((i) =>
+    //       i.id == currentWeek?.id ? selectedDay : i
+    //     );
+
+    //     localStorage.setItem("weeks", JSON.stringify(newState));
+    //     return newState;
+    //   });
+    // }
+  }, [selectedDay]);
   useEffect(() => {
     if (selectedDay) {
       setSelectedWeek((prev) => {
