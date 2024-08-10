@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { Carousel } from "./Carousel/Carousel";
 import { Day } from "./Day";
-import { getRecentCurrentWeek } from "../../Utilities/getWeekObject";
-import { TDay } from "../../Utilities/getWeekObject";
+import { getCurrentWeek } from "../../Utilities/weekHelpers";
+import { TDay } from "../../Utilities/weekHelpers";
 import { animated, useSpring, config } from "@react-spring/web";
-import { TTaskDay } from "../../Contexts/TasksContext";
+import { TTaskDay, TWeek } from "../../Contexts/TasksContext";
 import { IoIosArrowForward } from "react-icons/io";
 import { Calender } from "./CalenderModal/Calender";
 
@@ -13,7 +13,7 @@ type DashboardProps = {
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
   selectedDay: TTaskDay | null;
   setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
-  currentWeek: TTaskDay[];
+  currentWeek: TWeek | null;
   initDay: () => boolean;
   taskActive: boolean;
 };
@@ -98,14 +98,14 @@ export const Dashboard = ({
             </p>
           </button>
           <div className="time-tag dash-header">
-            <p>This Week | March 2024</p>
+            <p>This Week | My Weeks</p>
           </div>
           <div className="time-tag dash-header">
             <p>13 Tasks</p>
           </div>
         </div>
         <div className="weekday">
-          {currentWeek?.map((i) => (
+          {currentWeek?.days.map((i) => (
             <Day
               key={i.id}
               day={i}

@@ -90,7 +90,7 @@ function App() {
   } = useUserContext();
 
   const {
-    currentWeek,
+    selectedWeek,
     selectedDay,
     setSelectedDay,
     taskActive,
@@ -139,7 +139,7 @@ function App() {
             <Dashboard
               taskActive={taskActive}
               setTaskActive={setTaskActive}
-              currentWeek={currentWeek}
+              currentWeek={selectedWeek}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
               initDay={initDay}

@@ -4,11 +4,12 @@ import { useSpring, animated } from "@react-spring/web";
 import { TTaskDay } from "../../Contexts/TasksContext";
 import { TTask } from "../../Contexts/TasksContext";
 import { v4 } from "uuid";
-import { DayMap, MonthMap } from "../../Utilities/getWeekObject";
+import { DayMap, MonthMap } from "../../Utilities/weekHelpers";
 import { IoIosArrowBack } from "react-icons/io";
 import { TipTap } from "../../Tiptap";
 import { Editor, useEditor } from "@tiptap/react";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 
 export type ValidStateProps = {
   valid: boolean;
@@ -35,7 +36,7 @@ export const CreateTask = ({
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [simple, setSimple] = useState<boolean>(true);
   const [panelVisible, setPanelVisible] = useState<boolean>(true);
-
+  const [deleteVisible, setDeleteVisible] = useState<boolean>(false);
   const [formDetails, setFormDetails] = useState<TTask>({
     id: "",
     task: { simple: true, taskItem: { title: "", body: "null" } },
@@ -116,6 +117,22 @@ export const CreateTask = ({
     setTaskActive(false);
   };
 
+  const DeleteTaskDay = () => {
+    return (
+      <div className="container-delete-task-day">
+        <span className="cross-icon">
+          <RxCross2 />
+        </span>
+        <h3>Delete Day</h3>
+        <p>
+          Deleting this day will remove all of it's tasks and timeline, are you
+          sure?
+        </p>
+        <button>Delete</button>
+      </div>
+    );
+  };
+
   // Springs
   const fade = useSpring({
     opacity: isVisible ? 1 : 0,
@@ -152,6 +169,8 @@ export const CreateTask = ({
       opacity: !panelVisible ? "1" : "0",
     },
   });
+
+  const deleteSpring = useSpring({});
   // Error effect
   useEffect(() => {
     if (valid["valid"] == false) {
@@ -170,6 +189,17 @@ export const CreateTask = ({
       className="task-creation"
       style={{ ...creationSpring, transform: "transformY(-50%)" }}
     >
+      {deleteVisible && (
+        <animated.div>
+          <div
+            className="delete-task-overlay"
+            onClick={() => {
+              setDeleteVisible(false);
+            }}
+          ></div>
+          <DeleteTaskDay />
+        </animated.div>
+      )}
       <animated.div style={fade} className="invalid-form">
         <p>{valid["message"]}</p>
         <p>{JSON.stringify(simple)}</p>
@@ -182,7 +212,10 @@ export const CreateTask = ({
           {DayMap[selectedDay!.date?.getDay()!]} {selectedDay!.date?.getDate()!}{" "}
           {MonthMap[selectedDay!.date?.getMonth()!]}
         </h3>
-        <button className="btn icon trash">
+        <button
+          className="btn icon trash"
+          onClick={() => setDeleteVisible(true)}
+        >
           <FaRegTrashAlt />
         </button>
       </div>
@@ -243,3 +276,5 @@ export const CreateTask = ({
     </animated.div>
   );
 };
+
+export default CreateTask;

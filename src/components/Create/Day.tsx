@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
-import { DayMap } from "../../Utilities/getWeekObject";
-import { TDay } from "../../Utilities/getWeekObject";
+import { DayMap } from "../../Utilities/weekHelpers";
+import { TDay } from "../../Utilities/weekHelpers";
 import { useSpring, animated } from "@react-spring/web";
 import styled from "@emotion/styled";
 import { TTimeline } from "../../App";

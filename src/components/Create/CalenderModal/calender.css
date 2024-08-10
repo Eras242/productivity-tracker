@@ -2,7 +2,7 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: 2rem;
   border-radius: 6px;
   background-color: rgb(21, 21, 21);
   overflow: hidden;
@@ -12,24 +12,31 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 500px;
+  /* height: 500px; */
   margin-top: 1rem;
 }
 
 .row-7-day {
+  box-sizing: border-box;
   border-radius: 6px;
   display: flex;
   align-items: center;
-  height: 70px;
+  /* height: 70px; */
+  width: 100%;
   padding: 0.25rem;
   gap: 0.5rem;
   /* background-color: red; */
   transition: 0.3s;
+  border: 1px solid rgba(125, 125, 125, 0);
 }
 
 .row-7-day:hover {
   cursor: pointer;
-  background-color: rgba(125, 125, 125, 0.1);
+  background-color: rgba(100, 100, 100, 0.1);
+  border: 1px solid rgba(125, 125, 125, 0.1);
+}
+
+.row-7-day.selected {
 }
 
 .c-day {
@@ -94,7 +101,7 @@
 .cal-months-container {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.25rem;
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
@@ -106,8 +113,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 117px;
-  height: 130px;
+  width: 109px;
+  height: 109px;
   background-color: rgba(53, 53, 53, 0.1);
   border: 1px solid rgba(200, 200, 200, 0.1);
   transition: 0.3s;
@@ -126,4 +133,12 @@
   height: 200px;
   display: flex;
   flex-wrap: wrap;
+}
+.calender-footer {
+  align-self: flex-end;
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  height: auto;
 }

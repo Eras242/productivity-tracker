@@ -1,4 +1,5 @@
 import { v4 } from "uuid";
+import { User } from "../Contexts/UserContext";
 
 type TDayMap = {
   1: string;
@@ -32,8 +33,8 @@ export type TDay = {
   id: string;
 };
 
-export const getRecentCurrentWeek = (): TDay[] => {
-  const today = new Date();
+export const getCurrentWeek = (d?: Date): TDay[] => {
+  const today = d ? d : new Date();
   const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
   const monday = new Date(today); // Clone today's date
   monday.setDate(today.getDate() - currentDay + 1); // Set to Monday of the current week
@@ -45,7 +46,26 @@ export const getRecentCurrentWeek = (): TDay[] => {
     weekDays.push({ day: day, id: v4() });
   }
 
+  // Output: [{...}, {...}, {...}, {...}, {...}, {...}, {...}]
   return weekDays;
+};
+
+export const generateWeek = (user: User) => {
+  const weekDays = getCurrentWeek();
+  let weeks = [];
+
+  // Create week object from the days returned from week
+  let week = weekDays.map((i) => ({
+    id: v4(),
+    user: user,
+    date: i.day,
+    timeline: null,
+    tasks: [],
+    initialized: false,
+  }));
+
+  weeks.push({ id: v4(), days: week, startDate: weekDays[0].day });
+  localStorage.setItem("weeks", JSON.stringify(weeks));
 };
 
 export const DayMap: TDayMap = {

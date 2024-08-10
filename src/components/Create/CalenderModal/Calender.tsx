@@ -3,7 +3,7 @@ import { animated, useSpring, config } from "@react-spring/web";
 import "./calender.css";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-import { MonthMap } from "../../../Utilities/getWeekObject";
+import { MonthMap } from "../../../Utilities/weekHelpers";
 import { useTransition } from "@react-spring/web";
 import { log } from "console";
 
@@ -23,8 +23,6 @@ export const Calender = ({ visible }: { visible: boolean }) => {
 
   const [days, setDays] = useState<TDays[]>([]);
   const [weekRow, setWeekRow] = useState<TDays[][]>([[]]);
-
-  const [increment, setIncrement] = useState(0);
 
   const [init, setInit] = useState<boolean>(false);
 
@@ -55,7 +53,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
         generateCalenderDays(e.target.value, selectedYear);
         return 0;
       } else if (e.target.name == "year") {
-        setSelectedYear(e.target.value);
+        setSelectedYear(Number(e.target.value));
         return 1;
       } else {
         return 0;
@@ -63,9 +61,25 @@ export const Calender = ({ visible }: { visible: boolean }) => {
     });
   };
 
-  // Generate Days when month button is pressed, not on a refresh
-  // - initializeCalenderDays() - runs when the component is visible
-  // - generateCalenderDays() - runs when we click on a new month
+  const handleIncrement = (increment: number, index: number) => {
+    if (index == 0) {
+      setSelectedMonth((prev) => {
+        if (prev == 0 && increment < 0) {
+          generateCalenderDays(11, selectedYear);
+          setSelectedYear((prev) => prev + increment);
+          return 11;
+        } else if (prev == 11 && increment > 0) {
+          generateCalenderDays(0, selectedYear);
+          setSelectedYear((prev) => prev + increment);
+          return 0;
+        }
+        generateCalenderDays((prev + increment) % 12, selectedYear);
+        return (prev + increment) % 12;
+      });
+      // generateCalenderDays(selectedMonth, selectedYear);
+    }
+  };
+
   const generateCalenderDays = (month: number, year: number) => {
     console.log(month, year);
     if (year && month) {
@@ -116,27 +130,9 @@ export const Calender = ({ visible }: { visible: boolean }) => {
       } else {
         calenderEnd = lastDate;
       }
-
-      const weeklyRows: TDays[][] = [];
-      for (let i = 0; i < daysArr.length; i += 7) {
-        const week = days.slice(i, i + 7);
-        weeklyRows.push(week);
-      }
-      console.log(weeklyRows);
-      console.log(days);
-      setWeekRow(weeklyRows);
       setDays(daysArr);
     }
   };
-
-  // const generateWeeklyRows = () => {
-  //   const weeklyRows: TDays[][] = [];
-  //   for (let i = 0; i < days.length; i += 7) {
-  //     const week = days.slice(i, i + 7);
-  //     weeklyRows.push(week);
-  //   }
-  //   setWeekRow(weeklyRows);
-  // };
 
   useEffect(() => {
     if (!init) {
@@ -150,7 +146,15 @@ export const Calender = ({ visible }: { visible: boolean }) => {
       console.log(month, year);
       setInit(true);
     }
-  }, [visible, selectedMonth, days, weekRow]);
+    // console.log(days);
+    console.log(selectedMonth, selectedYear);
+    const weeklyRows: TDays[][] = [];
+    for (let i = 0; i < days.length; i += 7) {
+      const week = days.slice(i, i + 7);
+      weeklyRows.push(week);
+    }
+    setWeekRow(weeklyRows);
+  }, [visible, selectedMonth, days]);
 
   function CalenderDays() {
     return (
@@ -164,6 +168,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
           <li>S</li>
           <li>S</li>
         </ul>
+
         {weekRow.map((i) => (
           <div key={weekRow.indexOf(i)} className="row-7-day">
             {i.map((d) => {
@@ -238,6 +243,14 @@ export const Calender = ({ visible }: { visible: boolean }) => {
     );
   }
 
+  function handleCurrentMonth() {
+    if (today) {
+      setSelectedMonth(today.getMonth());
+      setSelectedYear(today.getFullYear());
+      generateCalenderDays(selectedMonth, selectedYear);
+    }
+  }
+
   return (
     <animated.div style={{ ...calenderSpring }} className="calender-modal">
       <div className="calender-header">
@@ -264,7 +277,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
           <div className="calender-header-buttons">
             <button
               onClick={() => {
-                setIncrement((prev) => prev - 1);
+                handleIncrement(-1, screenIndex);
               }}
               className="time-tag dash-header calender"
             >
@@ -272,7 +285,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
             </button>
             <button
               onClick={() => {
-                setIncrement((prev) => prev + 1);
+                handleIncrement(1, screenIndex);
               }}
               className="time-tag dash-header calender"
             >
@@ -300,8 +313,12 @@ export const Calender = ({ visible }: { visible: boolean }) => {
       </div>
       {/* <CalenderYears /> */}
       <div className="calender-footer">
-        <button>Go to: Current Month</button>
-        <button>Select Week</button>
+        <button
+          className="time-tag dash-header calender"
+          onClick={handleCurrentMonth}
+        >
+          Go to: Current Month
+        </button>
       </div>
     </animated.div>
   );

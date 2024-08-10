@@ -1,7 +1,7 @@
 import { TTimeline } from "../App";
 import { createContext, useContext, useEffect, useState } from "react";
 import { User, useUserContext } from "./UserContext";
-import { getRecentCurrentWeek } from "../Utilities/getWeekObject";
+import { generateWeek } from "../Utilities/weekHelpers";
 import { v4 } from "uuid";
 
 type TTaskItem = {
@@ -25,9 +25,15 @@ export type TTaskDay = {
   initialized: boolean;
 };
 
+export type TWeek = {
+  id: string;
+  startDate: Date | undefined;
+  days: TTaskDay[];
+};
+
 interface ITasksContext {
   user: User | null;
-  currentWeek: TTaskDay[];
+  selectedWeek: TWeek | null;
   selectedDay: TTaskDay | null;
   setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
   taskActive: boolean;
@@ -39,7 +45,7 @@ interface ITasksContext {
 
 const TasksContext = createContext<ITasksContext>({
   user: null,
-  currentWeek: [],
+  selectedWeek: null,
   selectedDay: null,
   setSelectedDay: () => {},
   taskActive: false,
@@ -53,24 +59,11 @@ export const useTasksContext = () => useContext(TasksContext);
 
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserContext();
-  const [currentWeek, setCurrentWeek] = useState<TTaskDay[]>([]);
+  const [today, setToday] = useState<Date>();
+  const [allWeeks, setAllWeeks] = useState<TWeek[]>([]);
+  const [selectedWeek, setSelectedWeek] = useState<TWeek | null>(null);
   const [selectedDay, setSelectedDay] = useState<TTaskDay | null>(null);
   const [taskActive, setTaskActive] = useState<boolean>(false);
-
-  const createWeek = () => {
-    const week = getRecentCurrentWeek();
-    let cw = week.map((i) => {
-      return {
-        id: v4(),
-        user: user,
-        date: i.day,
-        timeline: null,
-        tasks: [],
-        initialized: false,
-      };
-    });
-    localStorage.setItem("currentWeekState", JSON.stringify(cw));
-  };
 
   const initDay = () => {
     if (selectedDay) {
@@ -82,32 +75,99 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    const data = localStorage.getItem("currentWeekState");
-    let week: TTaskDay[];
-    week = JSON.parse(data!);
-    if (!data || week.length == 0) {
+    // get today
+    const t = new Date();
+    setToday(t);
+
+    // Look for current week in storage
+    const data = localStorage.getItem("weeks");
+    let weeks: TWeek[] = JSON.parse(data!);
+    // If no week found, generate current week starting from Monday
+    if (!data || weeks.length == 0) {
       console.log("No week found in Local Storage, creating week...");
-      createWeek();
-      return;
+      generateWeek(user!);
+      // return;
     }
-    setCurrentWeek(week.map((i) => ({ ...i, date: new Date(i.date!) })));
+
+    // JSON returns date as an ISO time string, need to map over each date of the returned week and convert the ISO -> date object
+    weeks = weeks.map((week) => ({
+      ...week,
+      startDate: new Date(week.startDate!),
+      days: week.days.map((day) => ({ ...day, date: new Date(day.date!) })),
+    }));
+
+    console.log(weeks);
+    // Check if current week is the actual current week by seeing if today exists in week, if yes, set currentWeek to current week, else generate new week and push this to allWeeks?
+
+    weeks.forEach((w) => {
+      let todayDate = t.toISOString().slice(0, 10).toString();
+      let index: number;
+
+      let curr = w.days.map((d) => d.date?.toISOString().slice(0, 10));
+      console.log(curr);
+      console.log(todayDate);
+
+      if (curr.includes(todayDate)) {
+        index = weeks.indexOf(w);
+        console.log(index);
+        setSelectedWeek(weeks[index]);
+        // setAllWeeks((prev) => (...prev, weeks[index]));
+        // return;
+      } else {
+      }
+    });
   }, []);
 
+  // useEffect for everytime a selectedDay changes or user changes
+  // 1. setCurrentWeek to ...prev days with new updated day
+  // 2. setAllWeeks to ...prev weeks with new updated week
+  // useEffect(() => {
+  //   if (selectedDay) {
+  //     setCurrentWeek((prev) => {
+  //       if (prev) {
+  //         const newState = {
+  //           ...prev,
+  //            prev.days.map((i) =>i.id == selectedDay.id ? selectedDay : i)
+  //         };
+
+  //         // localStorage.setItem("weeks", JSON.stringify(newState));
+  //         return newState;
+  //       }
+  //     });
+  //   }
+
+  //   //   setAllWeeks((prev) => {
+  //   //     const newState = prev?.map((i) =>
+  //   //       i.id == currentWeek?.id ? selectedDay : i
+  //   //     );
+
+  //   //     localStorage.setItem("weeks", JSON.stringify(newState));
+  //   //     return newState;
+  //   //   });
+  //   // }
+  // }, [selectedDay]);
   useEffect(() => {
     if (selectedDay) {
-      setCurrentWeek((prev) => {
-        const newState = prev.map((i) =>
-          i.id == selectedDay.id ? selectedDay : i
-        );
+      setSelectedWeek((prev) => {
+        if (prev) {
+          // Correctly update the days array within the currentWeek state
+          const updatedDays = prev.days.map((day: TTaskDay) =>
+            day.id === selectedDay.id ? selectedDay : day
+          );
+          const newState: TWeek = {
+            ...prev,
+            days: updatedDays,
+          };
 
-        localStorage.setItem("currentWeekState", JSON.stringify(newState));
-        return newState;
+          // Optionally, update local storage or perform other side effects here
+          // localStorage.setItem("weeks", JSON.stringify(newState));
+
+          return newState;
+        }
+        return prev; // Ensure we return the previous state if no updates are made
       });
-      console.log(currentWeek);
     }
-
-    console.log("Finished Update");
-  }, [user, selectedDay]);
+  }, [selectedDay]);
 
   // const handleTasks = (taskItem: TTask) => {
   //   if (Array.isArray(taskItem)) {
@@ -129,7 +189,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     <TasksContext.Provider
       value={{
         user,
-        currentWeek,
+        selectedWeek,
         selectedDay,
         setSelectedDay,
         taskActive,

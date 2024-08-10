@@ -7,9 +7,9 @@ import { css } from "@emotion/css";
 import { timeConverter } from "../../../Utilities/TimeConverter";
 import { Timeline } from "../../Display/Timeline/Timeline";
 import { TTimeline } from "../../../App";
-import { TDay } from "../../../Utilities/getWeekObject";
-import { MonthMap } from "../../../Utilities/getWeekObject";
-import { DayMap } from "../../../Utilities/getWeekObject";
+import { TDay } from "../../../Utilities/weekHelpers";
+import { MonthMap } from "../../../Utilities/weekHelpers";
+import { DayMap } from "../../../Utilities/weekHelpers";
 import { TTask, TTaskDay } from "../../../Contexts/TasksContext";
 
 type ScreenProps = {
