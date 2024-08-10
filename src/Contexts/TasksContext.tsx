@@ -60,7 +60,7 @@ export const useTasksContext = () => useContext(TasksContext);
 export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useUserContext();
   const [today, setToday] = useState<Date>();
-  const [allWeeks, setAllWeeks] = useState<TWeek[]>([]);
+  const [allWeeks, setAllWeeks] = useState<TWeek[] | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<TWeek | null>(null);
   const [selectedDay, setSelectedDay] = useState<TTaskDay | null>(null);
   const [taskActive, setTaskActive] = useState<boolean>(false);
@@ -74,19 +74,22 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // Initial render
   useEffect(() => {
     // get today
     const t = new Date();
     setToday(t);
 
     // Look for current week in storage
-    const data = localStorage.getItem("weeks");
+    let data = localStorage.getItem("weeks");
     let weeks: TWeek[] = JSON.parse(data!);
-    // If no week found, generate current week starting from Monday
-    if (!data || weeks.length == 0) {
+    // If no week found, generate current week starting from most recent Monday
+
+    while (!data || weeks.length == 0) {
       console.log("No week found in Local Storage, creating week...");
       generateWeek(user!);
-      // return;
+      data = localStorage.getItem("weeks");
+      weeks = JSON.parse(data!);
     }
 
     // JSON returns date as an ISO time string,
@@ -111,9 +114,9 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (curr.includes(todayDate)) {
         index = weeks.indexOf(w);
-        console.log(index);
         setSelectedWeek(weeks[index]);
       } else {
+        // Do thing here?
       }
     });
     setAllWeeks(weeks);
@@ -123,35 +126,43 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   // 1. setCurrentWeek to ...prev days with new updated day
   // 2. setAllWeeks to ...prev weeks with new updated week
 
-  useEffect(() => {
-    if (selectedDay) {
-      setSelectedWeek((prev) => {
-        if (prev) {
-          // Correctly update the days array within the currentWeek state
-          const updatedDays = prev.days.map((day: TTaskDay) =>
-            day.id === selectedDay.id ? selectedDay : day
-          );
-          const newState: TWeek = {
-            ...prev,
-            days: updatedDays,
-          };
+  // useEffect(() => {
+  //   if (selectedDay) {
+  //     // if new update selectedWeek
+  //     setSelectedWeek((prev) => {
+  //       if (prev) {
+  //         // Correctly update the days array within the currentWeek state
+  //         const updatedDays = prev.days.map((day: TTaskDay) =>
+  //           day.id === selectedDay.id ? selectedDay : day
+  //         );
 
-          // localStorage.setItem("weeks", JSON.stringify(newState));
-          return newState;
-        }
-      });
-    }
+  //         const newState: TWeek = {
+  //           ...prev,
+  //           days: updatedDays,
+  //         };
 
-    //   setAllWeeks((prev) => {
-    //     const newState = prev?.map((i) =>
-    //       i.id == currentWeek?.id ? selectedDay : i
-    //     );
+  //         // localStorage.setItem("weeks", JSON.stringify(newState));
+  //         return newState;
+  //       }
+  //       return prev;
+  //     });
 
-    //     localStorage.setItem("weeks", JSON.stringify(newState));
-    //     return newState;
-    //   });
-    // }
-  }, [selectedDay]);
+  //     setAllWeeks((prev) => {
+  //       if (prev) {
+  //         const newState = prev?.map((i) =>
+  //           i.id == selectedWeek?.id ? selectedDay : i
+  //         );
+
+  //         localStorage.setItem("weeks", JSON.stringify(newState));
+  //         return newState;
+  //       }
+  //       return prev;
+  //     });
+  //   }
+
+  //   // if new update allWeeks
+  // }, [selectedDay]);
+
   useEffect(() => {
     if (selectedDay) {
       setSelectedWeek((prev) => {
@@ -173,6 +184,25 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
         return prev; // Ensure we return the previous state if no updates are made
       });
     }
+
+    setAllWeeks((prev) => {
+      if (prev && selectedWeek && selectedDay) {
+        const newState = prev.map((i) =>
+          i.id === selectedWeek.id
+            ? {
+                ...i,
+                days: i.days.map((day) =>
+                  day.id === selectedDay.id ? selectedDay : day
+                ),
+              }
+            : i
+        );
+
+        localStorage.setItem("weeks", JSON.stringify(newState));
+        return newState;
+      }
+      return prev;
+    });
   }, [selectedDay]);
 
   // const handleTasks = (taskItem: TTask) => {

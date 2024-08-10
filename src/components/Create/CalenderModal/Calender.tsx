@@ -81,7 +81,6 @@ export const Calender = ({ visible }: { visible: boolean }) => {
   };
 
   const generateCalenderDays = (month: number, year: number) => {
-    console.log(month, year);
     if (year && month) {
       const firstDate = new Date(year, month, 1);
       const lastDate = new Date(year, Number(month) + 1, 0);
