@@ -111,21 +111,6 @@ export const Display = ({
     setSelectedDay((prev) => ({ ...prev!, tasks: [] }));
   };
 
-  const ContentPreview = () => {
-    return (
-      <div
-        style={{
-          // position: "absolute",
-          width: "500px",
-          height: "500px",
-          backgroundColor: "green",
-        }}
-      >
-        {JSON.stringify(selectedDay?.tasks[0].task.taskItem.body)}
-      </div>
-    );
-  };
-
   return (
     <div className="container display-todos">
       {/* <ContentPreview /> */}

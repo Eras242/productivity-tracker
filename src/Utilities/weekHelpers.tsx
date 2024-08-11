@@ -33,11 +33,24 @@ export type TDay = {
   id: string;
 };
 
-export const getCurrentWeek = (d?: Date): TDay[] => {
-  const today = d ? d : new Date();
+export const createWeekObjectFromDate = (date?: string): TDay[] => {
+  let today: Date;
+
+  if (date) {
+    const [year, month, day] = date.split("-").map(Number);
+    today = date ? new Date(year, month - 1, day) : new Date();
+  } else {
+    today = new Date();
+  }
+
   const currentDay = today.getDay(); // 0 (Sunday) to 6 (Saturday)
   const monday = new Date(today); // Clone today's date
-  monday.setDate(today.getDate() - currentDay + 1); // Set to Monday of the current week
+  if (currentDay == 0) {
+    monday.setDate(today.getDate() - 6); // Set to Monday of the current week
+  } else {
+    monday.setDate(today.getDate() - currentDay + 1); // Set to Monday of the current week
+  }
+  console.log(monday);
 
   const weekDays: TDay[] = [];
   for (let i = 0; i < 7; i++) {
@@ -50,8 +63,8 @@ export const getCurrentWeek = (d?: Date): TDay[] => {
   return weekDays;
 };
 
-export const generateWeek = (user: User) => {
-  const weekDays = getCurrentWeek();
+export const generateWeek = (user: User, date?: string) => {
+  const weekDays = createWeekObjectFromDate(date);
   let weeks = [];
 
   // Create week object from the days returned from week
@@ -69,6 +82,7 @@ export const generateWeek = (user: User) => {
   // Function should return weeks not set local storage
   // setting to local storage should happen independently
   localStorage.setItem("weeks", JSON.stringify(weeks));
+  return weeks;
 };
 
 export const DayMap: TDayMap = {

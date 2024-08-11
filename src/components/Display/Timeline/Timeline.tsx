@@ -59,30 +59,39 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
     return () => clearInterval(timeInterval);
   }, [timelineInfo, currentTime, totalWorkDuration]);
 
-  const getMiddayAsPercentage = () => {
-    if (timelineInfo.end) {
-      const end = timelineInfo.end;
-      const midday = 720;
-      // console.log(end);
-      return String(Math.trunc((midday / end) * 100));
-    }
-  };
-
-  const getCurrentTimeAsPercentage = () => {
+  const getTimeAsPercentage = (timeValue: string) => {
     if (timelineInfo.end && timelineInfo.start) {
-      const start = timelineInfo.start; // 600
-      const end = timelineInfo.end; // 1080
-      const ct = timeConverter("10:00", "tm"); // 910
-      const dur = end - start;
+      const time = Number(timeConverter(timeValue, "tm"));
 
-      const pos = Number(ct) - start;
-
-      // console.log(end);
-      return String(Math.trunc((pos / dur) * 100));
+      const start = timelineInfo.start;
+      const end = timelineInfo.end;
+      const pos = time - start;
+      const duration = end - start;
+      return String(Math.trunc((pos / duration) * 100));
     }
   };
+
+  // const getMiddayAsPercentage = () => {
+  //   if (timelineInfo.end) {
+  //     const end = timelineInfo.end;
+  //     const midday = 720;
+  //     // console.log(end);
+  //     return String(Math.trunc((midday / end) * 100));
+  //   }
+  // };
+
+  // const getCurrentTimeAsPercentage = () => {
+  //   if (timelineInfo.end && timelineInfo.start) {
+  //     const ct = timeConverter(currentTime, "tm"); // 910
+  //     const duration = timelineInfo.end - timelineInfo.start;
+
+  //     const time = Number(ct) - timelineInfo.start;
+
+  //     return String(Math.trunc((time / duration) * 100));
+  //   }
+  // };
   console.log(currentTime);
-  console.log(getCurrentTimeAsPercentage());
+  console.log(getTimeAsPercentage(currentTime));
 
   return (
     <div className="container day-timeline">
@@ -111,11 +120,13 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
         </p>
         <div
           className="timeline day-scrubber"
-          style={{ left: `${getCurrentTimeAsPercentage()}%` }}
-        ></div>
+          style={{ left: `${getTimeAsPercentage(currentTime)}%` }}
+        >
+          {currentTime}
+        </div>
         <div
           className="timeline twelvePM"
-          style={{ left: `${getMiddayAsPercentage()}%` }}
+          style={{ left: `${getTimeAsPercentage("12:00")}%` }}
         >
           12 PM
         </div>

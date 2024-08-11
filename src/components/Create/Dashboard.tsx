@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./dashboard.css";
 import { Carousel } from "./Carousel/Carousel";
 import { Day } from "./Day";
-import { getCurrentWeek } from "../../Utilities/weekHelpers";
+import { createWeekObjectFromDate } from "../../Utilities/weekHelpers";
 import { TDay } from "../../Utilities/weekHelpers";
 import { animated, useSpring, config } from "@react-spring/web";
 import { TTaskDay, TWeek } from "../../Contexts/TasksContext";
@@ -49,6 +49,10 @@ export const Dashboard = ({
     config: config.stiff,
     reset: true,
   });
+
+  useEffect(() => {
+    console.log(currentWeek);
+  }, []);
 
   const handleSelected = (day: TTaskDay) => {
     if (day.initialized) {

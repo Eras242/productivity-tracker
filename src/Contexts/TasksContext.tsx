@@ -99,8 +99,8 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
       startDate: new Date(week.startDate!),
       days: week.days.map((day) => ({ ...day, date: new Date(day.date!) })),
     }));
+    // console.log(weeks);
 
-    console.log(weeks);
     // Check if current week is the actual current week by seeing if today exists in week,
     // if yes, setSelectedWeek(current week),
     // else generate new week and push this to allWeeks?
@@ -109,13 +109,21 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
 
     weeks.forEach((w) => {
       let todayDate = t.toISOString().slice(0, 10).toString();
+      // console.log(todayDate);
       let index: number;
       let curr = w.days.map((d) => d.date?.toISOString().slice(0, 10));
+      // console.log(curr);
 
       if (curr.includes(todayDate)) {
         index = weeks.indexOf(w);
         setSelectedWeek(weeks[index]);
       } else {
+        // Generate a new week starting from the most recent last Monday and push it to allWeeks
+        const newWeek = generateWeek(user!, todayDate);
+        console.log("Generated new week: ", newWeek);
+        // get data from local storage again
+        data = localStorage.getItem("weeks");
+        weeks = JSON.parse(data!);
         // Do thing here?
       }
     });
@@ -160,7 +168,7 @@ export const TasksProvider = ({ children }: { children: React.ReactNode }) => {
   //     });
   //   }
 
-  //   // if new update allWeeks
+  // if new update allWeeks
   // }, [selectedDay]);
 
   useEffect(() => {
