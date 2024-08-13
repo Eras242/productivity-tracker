@@ -3,7 +3,7 @@ import { animated, useSpring, config } from "@react-spring/web";
 import "./calender.css";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
-import { MonthMap } from "../../../Utilities/weekHelpers";
+import { monthMap } from "../../../Utilities/weekHelpers";
 import { useTransition } from "@react-spring/web";
 import { log } from "console";
 
@@ -49,7 +49,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
     setScreenIndex(() => {
       if (e.target.name == "month") {
         setSelectedMonth(e.target.value);
-        console.log(MonthMap[e.target.value]);
+        console.log(monthMap[e.target.value]);
         generateCalenderDays(e.target.value, selectedYear);
         return 0;
       } else if (e.target.name == "year") {
@@ -199,7 +199,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
   }
 
   function CalenderMonths() {
-    const months = Object.keys(MonthMap).map((i) => {
+    const months = Object.keys(monthMap).map((i) => {
       return (
         <button
           key={i}
@@ -208,7 +208,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
           name="month"
           value={i}
         >
-          {MonthMap[Number(i)]}
+          {monthMap[Number(i)]}
         </button>
       );
     });
@@ -258,7 +258,7 @@ export const Calender = ({ visible }: { visible: boolean }) => {
             setScreenIndex(1);
           }}
         >
-          <h2>{MonthMap[selectedMonth]}</h2>
+          <h2>{monthMap[selectedMonth]}</h2>
         </button>
         <button
           className="time-tag dash-header calender"

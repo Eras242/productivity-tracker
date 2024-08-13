@@ -95,7 +95,7 @@ export const DayMap: TDayMap = {
   0: "Sunday",
 };
 
-export const MonthMap: TMonthMap = {
+export const monthMap: TMonthMap = {
   0: "January",
   1: "February",
   2: "March",

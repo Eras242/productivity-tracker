@@ -6,6 +6,7 @@ import { TTimeline } from "../../../App";
 import { jsx } from "@emotion/react";
 import { css } from "@emotion/css";
 import { TTask } from "../../../Contexts/TasksContext";
+import { TextBox } from "../../ui/TextBox";
 
 interface TaskDotInterface {
   task: TTask;
@@ -45,10 +46,19 @@ export const TaskDot = ({ task, info }: TaskDotInterface) => {
           opacity: isHovered ? "100%" : "0",
         }}
       >
-        <div className="time-tag day">{task.time}</div>
+        <TextBox>{task.time}</TextBox>
         <p className="tm-title">{task.task.taskItem.title}</p>
         <p>Completed: {task.completed ? "True" : "False"}</p>
       </div>
+      <p
+        className="task-time"
+        style={{
+          display: isHovered ? "none" : "flex",
+          opacity: isHovered ? "0%" : "50%",
+        }}
+      >
+        {task.time}
+      </p>
     </div>
   );
 };

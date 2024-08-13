@@ -99,15 +99,13 @@ export const Timeline = ({ tasks, timeline }: TimelineProps) => {
         <div
           className="timeline day-scrubber"
           style={{ left: `${getTimeAsPercentage(currentTime)}%` }}
-        >
-          <p>{currentTime}</p>
-        </div>
-        <div
+        ></div>
+        {/* <div
           className="timeline twelvePM"
           style={{ left: `${getTimeAsPercentage("12:00")}%` }}
         >
           12 PM
-        </div>
+        </div> */}
         <div className="timeline task-dot-container">
           {" "}
           {tasks!.map((t) => {

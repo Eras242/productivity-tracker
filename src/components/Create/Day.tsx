@@ -7,6 +7,7 @@ import { TTimeline } from "../../App";
 import { TTask, TTaskDay } from "../../Contexts/TasksContext";
 import { IoIosAdd } from "react-icons/io";
 import { MdSunny } from "react-icons/md";
+import { monthMap } from "../../Utilities/weekHelpers";
 
 type TDayProps = {
   day: TTaskDay;
@@ -58,7 +59,8 @@ export const Day = ({ day, selected, handleSelected }: TDayProps) => {
       )}
       <p>{DayMap[day.date?.getDay()!]}</p>
       <p>
-        {day.date?.getDate()}th {"March"}, {"2024"}
+        {day.date?.getDate()}th {monthMap[day.date!.getUTCMonth()]},{" "}
+        {day.date?.getFullYear()}
       </p>
       <div
         style={{

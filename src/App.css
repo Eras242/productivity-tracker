@@ -36,7 +36,7 @@
 }
 
 .container {
-  overflow: hidden;
+  /* overflow: hidden; */
   transform-origin: center;
   padding: 2rem;
   box-sizing: border-box;

@@ -4,7 +4,7 @@ import { useSpring, animated } from "@react-spring/web";
 import { TTaskDay } from "../../Contexts/TasksContext";
 import { TTask } from "../../Contexts/TasksContext";
 import { v4 } from "uuid";
-import { DayMap, MonthMap } from "../../Utilities/weekHelpers";
+import { DayMap, monthMap } from "../../Utilities/weekHelpers";
 import { IoIosArrowBack } from "react-icons/io";
 import { TipTap } from "../../Tiptap";
 import { Editor, useEditor } from "@tiptap/react";
@@ -210,7 +210,7 @@ export const CreateTask = ({
         </button>
         <h3 className="date-box">
           {DayMap[selectedDay!.date?.getDay()!]} {selectedDay!.date?.getDate()!}{" "}
-          {MonthMap[selectedDay!.date?.getMonth()!]}
+          {monthMap[selectedDay!.date?.getMonth()!]}
         </h3>
         <button
           className="btn icon trash"

@@ -8,7 +8,7 @@ import { timeConverter } from "../../../Utilities/TimeConverter";
 import { Timeline } from "../../Display/Timeline/Timeline";
 import { TTimeline } from "../../../App";
 import { TDay } from "../../../Utilities/weekHelpers";
-import { MonthMap } from "../../../Utilities/weekHelpers";
+import { monthMap } from "../../../Utilities/weekHelpers";
 import { DayMap } from "../../../Utilities/weekHelpers";
 import { TTask, TTaskDay } from "../../../Contexts/TasksContext";
 
@@ -236,7 +236,7 @@ export const Carousel = ({
         style={{ position: "absolute", zIndex: "9999", top: "25%" }}
       >
         {DayMap[day!.date?.getDay()!]} {day!.date?.getDate()!}{" "}
-        {MonthMap[day!.date?.getMonth()!]}
+        {monthMap[day!.date?.getMonth()!]}
       </h3>
       <Container>
         {transitions((style, i) => {

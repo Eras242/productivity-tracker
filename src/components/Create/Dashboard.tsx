@@ -9,6 +9,8 @@ import { TTaskDay, TWeek } from "../../Contexts/TasksContext";
 import { IoIosArrowForward } from "react-icons/io";
 import { Calender } from "./CalenderModal/Calender";
 import { TTimeline } from "../../App";
+import { TextBox } from "../ui/TextBox";
+import { TodayHeaderCard } from "./TodayHeaderCard";
 
 type DashboardProps = {
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,6 +38,14 @@ export const Dashboard = ({
     to: {
       transform:
         selectedDay && !taskActive ? "translateX(0%)" : "translateX(100%)",
+    },
+    config: config.stiff,
+    reset: true,
+  });
+  const tasksSpring = useSpring({
+    from: { width: "100%" },
+    to: {
+      width: (selectedDay && !taskActive) || calenderVisible ? "50%" : "100%",
     },
     config: config.stiff,
     reset: true,
@@ -72,7 +82,7 @@ export const Dashboard = ({
       style={{ translateY: "translateY(-100%)" }}
       className="dashboard"
     >
-      <animated.div className="dashboard-panel-main">
+      <animated.div className="dashboard-panel-main" style={{ ...tasksSpring }}>
         <div className="headings">
           {" "}
           <div>
@@ -91,7 +101,13 @@ export const Dashboard = ({
             </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "0.5rem",
+          }}
+        >
           <button
             className="time-tag dash-header calender"
             onClick={() => {
@@ -111,6 +127,8 @@ export const Dashboard = ({
             <p>13 Tasks</p>
           </div>
         </div>
+
+        <TodayHeaderCard currentWeek={currentWeek} />
         <div className="weekday">
           {currentWeek?.days.map((i) => (
             <Day
