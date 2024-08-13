@@ -20,6 +20,9 @@ type ICarouselProps = {
   day: TTaskDay | null;
   initDay: () => boolean;
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
+  setTimelineInfo: React.Dispatch<React.SetStateAction<TTimeline>>;
+  selectedDay: TTaskDay | null;
+  setSelectedDay: React.Dispatch<React.SetStateAction<TTaskDay | null>>;
 };
 
 type TTemp = {
@@ -30,7 +33,14 @@ type TTemp = {
   [key: string]: number;
 };
 
-export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
+export const Carousel = ({
+  day,
+  setTaskActive,
+  initDay,
+  setTimelineInfo,
+  selectedDay,
+  setSelectedDay,
+}: ICarouselProps) => {
   const [screenIndex, setScreenIndex] = useState<number>(0);
   const screens = [Wake, Start, End, Sleep, Complete];
   const [error, setError] = useState({ error: false, message: "" });
@@ -48,8 +58,19 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
   }, [day]);
 
   const handleComplete = () => {
-    initDay();
     setTaskActive(true);
+    // console.log(tempTimeline);
+    setTimelineInfo(tempTimeline);
+
+    // Set selectedDay's timeline key to tempTimeline using the setSelectedDay function
+    setSelectedDay((prev) => {
+      if (prev && selectedDay) {
+        return { ...selectedDay, timeline: tempTimeline };
+      } else {
+        return prev;
+      }
+    });
+    initDay();
   };
 
   const handleNext = (e: any) => {
@@ -80,8 +101,6 @@ export const Carousel = ({ day, setTaskActive, initDay }: ICarouselProps) => {
           setScreenIndex((prev) => (prev + 1) % screens.length);
         }
       }
-
-      console.log(tempTimeline);
     }
   };
 

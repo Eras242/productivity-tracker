@@ -78,7 +78,7 @@ const testTimeline = {
 };
 
 function App() {
-  const [timelineInfo, setTimelineDetails] = useState<TTimeline>(testTimeline);
+  const [timelineInfo, setTimelineInfo] = useState<TTimeline>(testTimeline);
 
   const {
     user,
@@ -142,6 +142,7 @@ function App() {
               currentWeek={selectedWeek}
               selectedDay={selectedDay}
               setSelectedDay={setSelectedDay}
+              setTimelineInfo={setTimelineInfo}
               initDay={initDay}
             />
           )}
@@ -173,7 +174,7 @@ function App() {
         {taskActive && (
           <Timeline
             tasks={selectedDay && selectedDay.tasks}
-            timelineInfo={timelineInfo}
+            timeline={selectedDay?.timeline!}
           />
         )}
       </animated.div>

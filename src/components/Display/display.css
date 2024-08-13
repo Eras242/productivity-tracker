@@ -135,6 +135,8 @@
   left: 21%;
   width: 1px;
   height: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .timeline.twelvePM {

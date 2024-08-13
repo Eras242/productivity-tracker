@@ -8,6 +8,7 @@ import { animated, useSpring, config } from "@react-spring/web";
 import { TTaskDay, TWeek } from "../../Contexts/TasksContext";
 import { IoIosArrowForward } from "react-icons/io";
 import { Calender } from "./CalenderModal/Calender";
+import { TTimeline } from "../../App";
 
 type DashboardProps = {
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +17,7 @@ type DashboardProps = {
   currentWeek: TWeek | null;
   initDay: () => boolean;
   taskActive: boolean;
+  setTimelineInfo: React.Dispatch<React.SetStateAction<TTimeline>>;
 };
 
 export const Dashboard = ({
@@ -25,6 +27,7 @@ export const Dashboard = ({
   currentWeek,
   initDay,
   taskActive,
+  setTimelineInfo,
 }: DashboardProps) => {
   const [calenderVisible, setCalenderVisible] = useState<boolean>(false);
 
@@ -138,6 +141,9 @@ export const Dashboard = ({
               day={selectedDay}
               setTaskActive={setTaskActive}
               initDay={initDay}
+              setTimelineInfo={setTimelineInfo}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
             />
           )}
         </div>

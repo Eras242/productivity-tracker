@@ -142,11 +142,9 @@ export const Calender = ({ visible }: { visible: boolean }) => {
       generateCalenderDays(month, year);
       setSelectedMonth(month);
       setSelectedYear(year);
-      console.log(month, year);
       setInit(true);
     }
     // console.log(days);
-    console.log(selectedMonth, selectedYear);
     const weeklyRows: TDays[][] = [];
     for (let i = 0; i < days.length; i += 7) {
       const week = days.slice(i, i + 7);

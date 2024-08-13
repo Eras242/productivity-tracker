@@ -12,7 +12,7 @@ import { TextBox } from "../../ui/TextBox";
 
 type TimelineProps = {
   tasks: TTask[] | null;
-  timelineInfo: TTimeline;
+  timeline: TTimeline;
 };
 
 type timeCountType = {
@@ -20,7 +20,7 @@ type timeCountType = {
   minutesCount: number;
 };
 
-export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
+export const Timeline = ({ tasks, timeline }: TimelineProps) => {
   const [currentTime, setCurrentTime] = useState<string>("");
   const [totalWorkDuration, setTotalWorkDuration] = useState<number>(0);
   const [timeRemaining, setTimeRemaining] = useState<string>("");
@@ -36,10 +36,10 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
 
       setCurrentTime(formattedTime);
     });
-    if (timelineInfo) {
+    if (timeline) {
       const dayTotal: number | undefined = getDuration(
-        timelineInfo.start!,
-        timelineInfo.end!
+        timeline.start!,
+        timeline.end!
       )?.duration;
 
       setTotalWorkDuration(dayTotal!);
@@ -57,72 +57,50 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
     }
 
     return () => clearInterval(timeInterval);
-  }, [timelineInfo, currentTime, totalWorkDuration]);
+  }, [timeline, currentTime, totalWorkDuration]);
 
   const getTimeAsPercentage = (timeValue: string) => {
-    if (timelineInfo.end && timelineInfo.start) {
+    if (timeline.end && timeline.start) {
       const time = Number(timeConverter(timeValue, "tm"));
 
-      const start = timelineInfo.start;
-      const end = timelineInfo.end;
+      const start = timeline.start;
+      const end = timeline.end;
       const pos = time - start;
       const duration = end - start;
       return String(Math.trunc((pos / duration) * 100));
     }
   };
 
-  // const getMiddayAsPercentage = () => {
-  //   if (timelineInfo.end) {
-  //     const end = timelineInfo.end;
-  //     const midday = 720;
-  //     // console.log(end);
-  //     return String(Math.trunc((midday / end) * 100));
-  //   }
-  // };
-
-  // const getCurrentTimeAsPercentage = () => {
-  //   if (timelineInfo.end && timelineInfo.start) {
-  //     const ct = timeConverter(currentTime, "tm"); // 910
-  //     const duration = timelineInfo.end - timelineInfo.start;
-
-  //     const time = Number(ct) - timelineInfo.start;
-
-  //     return String(Math.trunc((time / duration) * 100));
-  //   }
-  // };
-  console.log(currentTime);
-  console.log(getTimeAsPercentage(currentTime));
-
   return (
     <div className="container day-timeline">
       <div className=" day-line start-finish">
         <p className="time-marker wake-up">
-          {typeof timelineInfo.wakeUp === "number"
-            ? timeConverter(timelineInfo.wakeUp, "mt") + " AM"
+          {typeof timeline.wakeUp === "number"
+            ? timeConverter(timeline.wakeUp, "mt") + " AM"
             : "NaN"}
         </p>
         <p className="time-marker sleep">
-          {typeof timelineInfo.sleep === "number"
-            ? timeConverter(timelineInfo.sleep, "mt") + " AM"
+          {typeof timeline.sleep === "number"
+            ? timeConverter(timeline.sleep, "mt") + " AM"
             : "NaN"}
         </p>
       </div>
       <div className="day-line">
         <p className="time-marker start">
-          {typeof timelineInfo.start === "number"
-            ? timeConverter(timelineInfo.start, "mt") + " AM"
+          {typeof timeline.start === "number"
+            ? timeConverter(timeline.start, "mt") + " AM"
             : "NaN"}
         </p>
         <p className="time-marker end">
-          {typeof timelineInfo.end === "number"
-            ? timeConverter(timelineInfo.end, "mt") + " AM"
+          {typeof timeline.end === "number"
+            ? timeConverter(timeline.end, "mt") + " AM"
             : "NaN"}
         </p>
         <div
           className="timeline day-scrubber"
           style={{ left: `${getTimeAsPercentage(currentTime)}%` }}
         >
-          {currentTime}
+          <p>{currentTime}</p>
         </div>
         <div
           className="timeline twelvePM"
@@ -133,7 +111,7 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
         <div className="timeline task-dot-container">
           {" "}
           {tasks!.map((t) => {
-            return <TaskDot task={t} info={timelineInfo} />;
+            return <TaskDot task={t} info={timeline} />;
           })}
         </div>
       </div>
@@ -144,8 +122,8 @@ export const Timeline = ({ tasks, timelineInfo }: TimelineProps) => {
           <TextBox>{currentTime} PM</TextBox>
           <TextBox>
             {" "}
-            {getDuration(timelineInfo.start!, timelineInfo.end!)?.hours}HR{" "}
-            {getDuration(timelineInfo.start!, timelineInfo.end!)?.minutes}MIN
+            {getDuration(timeline.start!, timeline.end!)?.hours}HR{" "}
+            {getDuration(timeline.start!, timeline.end!)?.minutes}MIN
           </TextBox>
         </div>
         {/* <div className="time-tag day">{totalWorkDuration}</div> */}
