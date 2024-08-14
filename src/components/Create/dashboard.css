@@ -31,8 +31,13 @@
   flex-wrap: wrap;
 }
 
+.stack-grid-container {
+  background-color: red;
+}
+
 .day {
-  width: 148px;
+  box-sizing: border-box;
+  width: 150px;
   height: 100px;
   cursor: pointer;
   display: flex;

@@ -11,6 +11,7 @@ import { Calender } from "./CalenderModal/Calender";
 import { TTimeline } from "../../App";
 import { TextBox } from "../ui/TextBox";
 import { TodayHeaderCard } from "./TodayHeaderCard";
+import { DayGridLayout } from "./DayGridLayout";
 
 type DashboardProps = {
   setTaskActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -129,16 +130,11 @@ export const Dashboard = ({
         </div>
 
         <TodayHeaderCard currentWeek={currentWeek} />
-        <div className="weekday">
-          {currentWeek?.days.map((i) => (
-            <Day
-              key={i.id}
-              day={i}
-              selected={selectedDay}
-              handleSelected={handleSelected}
-            />
-          ))}
-        </div>
+        <DayGridLayout
+          currentWeek={currentWeek}
+          selectedDay={selectedDay}
+          handleSelected={handleSelected}
+        />
       </animated.div>
       <animated.div
         style={{ ...carouselSpring }}
